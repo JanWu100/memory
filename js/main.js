@@ -18,8 +18,8 @@ console.log("hello")
 
 let currentLevel = 1;
 let levelSize = 8;
-const shapes = ["maze1","maze2","maze3","maze4,","maze5"];
-const colors = ["red","blue","green","yellow","black"];
+const shapes = ["maze1","maze2","maze3","maze4","maze5"];
+const colors = ["#0C4767","#EB5160","#66A182","#06BCC1","white"];
 let deck = [];
 
 
@@ -48,24 +48,90 @@ function shuffle(arr) {
 
 
 
-
-
+let cardsDrawn = 0;
+let solved = 0;
 document.querySelector("#start").addEventListener("click",()=>{
+    
+
+    
+
     document.querySelector(".welcome-screen").classList.add("hidden");
 
     const level1 = createLevel();
-    
+  
+    function abc() {
+        console.log(solved)
+        console.log(this)
+        this.classList.add("obrocik");
+        cardsDrawn++;
+        setTimeout(()=>{
+            this.classList.remove("hidden");
+        },200)
+        
+        this.removeEventListener("click", abc);
+        if (cardsDrawn === 1) {
+            console.log("f  " + this.dataset.value)
+            firstSelectedCard = this.dataset.value;
+        }
+        if (cardsDrawn === 2) {
+            console.log("s  " + this.dataset.value)
 
-    // console.log(level1)
+            secondSelectedCard = this.dataset.value;
+        }
+        
+        if (cardsDrawn > 1) {
+            if (firstSelectedCard === secondSelectedCard){
+            solved++;
+            cardsDrawn = 0
+            if (solved === levelSize/2){
+                setTimeout(()=>{
+                    console.log("you win")
+                    document.querySelector(".win").innerHTML = "<h1>You win</h1>"
+                }, 1000);
+            }
+
+            } else {
+                let currentCards = document.querySelectorAll(".cardoo");
+                currentCards.forEach((card)=>{
+                    card.removeEventListener("click", abc);
+                })    
+                setTimeout(hideCards, 2000);
+            }
+
+        }
+    }
 
     level1.forEach(card =>{
         console.log(card);
         const cardoo = document.createElement("div");
         cardoo.classList.add("cardoo");
-        cardoo.innerHTML = card.color;
-
+        cardoo.setAttribute("data-value",`${card.shape}`)
+        
+        cardoo.innerHTML = `
+            
+            <img src="files/${card.shape}.svg" onload="SVGInject(this)" fill=${card.color}></img>
+        
+        
+        `;
         document.querySelector(".current-level").appendChild(cardoo);
     })
 
+    function hideCards() {
+        solved = 0;
+        cardsDrawn = 0
+        let currentCards = document.querySelectorAll(".cardoo");
+        currentCards.forEach((card)=>{
+            card.classList.add("hidden");
+            card.classList.remove("obrocik");
+            card.addEventListener("click", abc);
+        })
+        
+    }
+
+    setTimeout(hideCards, 1000);
+
+   
+
 
 })
+
