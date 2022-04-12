@@ -1,94 +1,241 @@
 :root {
-    --color-primary: #0C4767;
-    --color-background: #F6E7CB;
-  }
-  *,
-  *::after,
-  *::before {
-    box-sizing: border-box;
-  }
-  
-  /* ::selection {
-    background: var(--color-primary);
-    color: rgb(0, 0, 0);
-  } */
+  --color-primary: #0c4767;
+  --color-background: #F6E7CB;
+}
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
 
 
 
-  body {
-      background-color: var(--color-background);
-      color: var(--color-primary)
-  }
-  .container {
-      padding: 0 2rem;
-  }
-  .main-wrapper {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      /* width: 100vw; */
-      height: 100vh;
-  }
-  .message {
-      max-width: 400px;
-      text-align: center;
-  }
-  .welcome-screen {
-    text-align: center;
-  }
-
-  .hidden {
-    display: none;
-  }
-
-  .cardoo.hidden {
-    background-color: #0C4767;
-  }
-
-  .cardoo.hidden svg{
-    display: none;
-  }
+/* ::selection {
+  background: var(--color-primary);
+  color: rgb(0, 0, 0);
+} */
 
 
-  .current-level {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
 
-  .cardoo {
-    border: 2px solid var(--color-primary);
-    border-radius: 15px;
-    width: 120px;
-    justify-self: center;
-    height: 200px;
-    margin: 10px;
+body {
+    background-color: var(--color-background);
+    color: var(--color-primary);
+    overflow: hidden;
+    font-family: 'Roboto', sans-serif;
+}
+
+
+
+
+
+
+h3 {
+  font-size: 6rem;
+}
+h4 {
+  font-weight: 300;
+}
+.player-score {
+  font-weight: 900;
+}
+
+
+
+
+
+
+.container {
+    padding: 0 2rem;
+}
+.main-wrapper {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-  }
-  .cardoo:hover {
-    transform: scale(1.05);
-    transition: transform 100ms;
+    /* width: 100vw; */
+    height: 100vh;
+}
+.message {
+    max-width: 400px;
+    text-align: center;
+}
+.welcome-screen {
+  text-align: center;
+  position:absolute;
+  z-index: 9;
+}
+
+.hidden {
+  display: none;
+  pointer-events: none;
+}
+
+.cardoo.card-back {
+  background-color: #0C4767;
+  background-image: url(../files/Maze_bg.svg);
+  background-size: cover;
+ 
+}
+
+.card-back svg{
+  display: none;
+}
+
+
+.current-level {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(4, 180px);
+  grid-template-rows: repeat(2,300px);
+  gap: 20px;
+}
+
+.cardoo {
+  border: 2px solid var(--color-primary);
+  background-color: #faf3e7;
+  border-radius: 15px;
+  width: 100%;
+  justify-self: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: scale(1);
+  transition: all 100ms;
+ 
+}
+.cardoo:hover {
+  transform: scale(1.03);
+  -webkit-box-shadow: -0px 5px 25px 0px rgba(12, 71, 103, 0.21);
+  -moz-box-shadow: -0px 5px 25px 0px rgba(12, 71, 103, 0.21);
+  box-shadow: -0px 5px 25px 0px rgba(12, 71, 103, 0.21);
+}
+.cardoo svg{
+  width:50%;
+}
+
+.obrocik {
+  animation-name: exam;
+  animation-duration: 0.3s;
+}
+
+
+
+.cardoo img{
+  width: 10%;
+}
+
+.win-wrapper {
+ position: absolute;
+ opacity: 0;
+ transition: opacity 1s;
+ 
+ 
+}
+
+.fade-in {
   
-  }
+  animation-name: fadeIn;
+  animation-duration: 0.6s;
+  
+}
 
-  .obrocik {
-    animation-name: exam;
-    animation-duration: 0.4s;
-  }
 
-  .cardoo img{
-    width: 10%;
-  }
+.win {
+ position: absolute;
+ z-index: 3;
+ background-color: var(--color-background);
+ display:flex;
+ align-items: center;
+ justify-content: center;
+ width: 100%;
+ height: 100%;
+ text-align: center;
+ font-size: 6rem;
+ opacity: 1;
+}
 
- .win{
-   position: absolute;
-   display: flex;
- }
+@keyframes exam {
+  0% {width:100%}
+  50% {width: 1%}
+  100% {width: 100%}
+}
 
-  @keyframes exam {
-    0% {width:120px}
-    50% {width: 0px}
-    100% {width: 120px}
-  }
+@keyframes fadeIn {
+  0% {opacity: 0}
+  100% {opacity: 1}
+}
+
+.tescik {
+ 
+  height: 100px;
+  background-color: red;
+}
+#transition {
+  position: absolute;
+  background-color: var(--color-primary);
+  clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+  height: 100%;
+  width: 140%;
+  left: -140%;
+  z-index: 5;
+  
+
+}
+
+.dynamic-points {
+  position: absolute;
+  font-size: 10rem;
+  color: #0c4767;
+  z-index: 10;
+}
+
+#advance{
+  position: absolute;
+  z-index: 6;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: rgb(245, 227, 194);
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+
+.timer {
+  position: absolute;
+  pointer-events: none;
+}
+
+nav {
+  z-index: 4;
+  position: fixed;
+  
+  width: 100%;
+  height: 80px;
+ 
+  
+}
+.points {
+  background-color: #e3d4ba;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1000px;
+  display: flex;
+  align-items: center;
+}
+
+.floating-points {
+  position: absolute;
+  z-index: 10;
+  font-size: 2rem;
+  font-weight: 900;
+  opacity: 0;
+  transition: transform 0.4;
+}

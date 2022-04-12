@@ -1,33 +1,15 @@
 
 let levelSize = 8;
 const shapes = ["maze1","maze2","maze3","maze4","maze5"];
-const colors = ["#0C4767","#EB5160","#66A182","#06BCC1","blue"];
+const colors = ["#0C4767","#EB5160","#66A182","#06BCC1","white"];
 
 let deck = [];
 let cardsDrawn = 0;
 let solved = 0;
 let introToLevelDuration = 3000;
 let level = 1;
-let playerScore = 0;
-
-// function getTime(){
-//     date = new Date();
-    
-//     let miliseconds = date.getMilliseconds();
-//     let seconds = date.getSeconds()
-//     return levelStart = parseFloat(seconds +"." +miliseconds);
-// }
-
-
-
-let pointsFormula = 500;
 
 const win = document.querySelector("#win")
-
-const points = document.querySelector(".points");
-const floatingPoints = document.querySelector(".floating-points");
-
-
 
 function createLevel() {
     
@@ -54,9 +36,7 @@ function shuffle(arr) {
 
 
 
-function displayPlayerScore() {
-    points.innerHTML = `<h4>Player points: <span class="player-score">${playerScore}</span></h4>`
-}
+
 
 
 
@@ -64,15 +44,15 @@ function displayPlayerScore() {
 const startLevel = ()=>{
 
     
-   
+
     
 
     document.querySelector(".welcome-screen").classList.add("hidden");
     
     let currentLevel = createLevel();
-    circularTimer(introToLevelDuration/1000)
+    timer.start();
   
-    function abc(event) {
+    function abc() {
         // console.log(solved)
         // console.log(this)
         // flip(this,100,-20).then(()=> flip(this,1,20))
@@ -81,7 +61,7 @@ const startLevel = ()=>{
         this.classList.remove("fade-in");
         cardsDrawn++;
         setTimeout(()=>{
-            this.classList.remove("card-back");
+            this.classList.remove("hidden");
         },200)
         
         this.removeEventListener("click", abc);
@@ -95,23 +75,6 @@ const startLevel = ()=>{
         if (cardsDrawn > 1 && firstSelectedCard === secondSelectedCard) {
             solved++;
             cardsDrawn = 0
-            let posX = event.clientX -20;
-            let posY = event.clientY -100;
-            floatingPoints.innerHTML = `${pointsFormula}`
-
-            floatingPoints.style.left = (posX)+"px";
-            floatingPoints.style.top = (posY)+"px";
-            const float = setInterval(()=>{
-                posY = posY - 1;
-                floatingPoints.style.top = (posY)+"px";
-            },10)
-
-
-            fadeInOut(floatingPoints,0,0.05,1,30).then(()=>fadeInOut(floatingPoints,1,-0.05,0,30)).then(()=>{
-                clearInterval(float);
-            })
-            playerScore = playerScore + pointsFormula;
-
 
         }
         if (cardsDrawn > 1 && firstSelectedCard !== secondSelectedCard) {
@@ -132,13 +95,12 @@ const startLevel = ()=>{
             //     win.classList.add("win");
             //     document.querySelector("#start2").addEventListener("click",startLevel)
             // }, 1000);
-            displayPlayerScore();
             const advanceLevel = document.querySelector("#advance")
             introToLevelDuration = introToLevelDuration-100;
             level++;
             advanceLevel.innerHTML = `<h3>Level ${level}</h3>`
             setTimeout(()=>{
-                fadeInOut(advanceLevel,0,.05,1,20).then(()=> fadeInOut(advanceLevel,1,-.05,0,30))
+                advance(advanceLevel,0,.05,1,20).then(()=> advance(advanceLevel,1,-.05,0,30))
                 setTimeout(startLevel, 500);
 
             },1500)
@@ -157,7 +119,7 @@ const startLevel = ()=>{
         
         cardoo.innerHTML = `
             
-            <img src="files/${card.shape}.svg" onload="SVGInject(this)" fill=${card.color}></img>
+            <img src="files/${card.shape}.svg" onload="SVGInject(this)" fill=${card.color} width="70%" height="70%"></img>
         
         
         `;
@@ -186,7 +148,7 @@ const startLevel = ()=>{
             }
         setTimeout(()=>{
             currentCards.forEach((card)=>{
-                card.classList.add("card-back");
+                card.classList.add("hidden");
                 
                 card.classList.remove("obrocik");
                 card.classList.remove("fade-in");
@@ -262,11 +224,27 @@ let duration;
 
 
 
+function getPoints(){
+    const dynamicPoints = document.createElement("h3");
+        dynamicPoints.classList.add("dynamic-points");
 
-const fadeInOut = (element, startingOpacity,changeValue, boundary,interval)=>{
+        
+        
+        dynamicPoints.innerHTML = `
+            
+            300
+        
+        
+        `;
+        document.querySelector(".container").appendChild(dynamicPoints);
+
+
+}
+
+const advance = (element, startingOpacity,changeValue, boundary,interval)=>{
     return new Promise((resolve,reject)=>{
     let opacity = startingOpacity;
-  
+
 
         const myInterval = setInterval(()=>{
             element.style.opacity = `${opacity}`;
@@ -285,8 +263,6 @@ const fadeInOut = (element, startingOpacity,changeValue, boundary,interval)=>{
 
 
 
-
-
 // tescik.addEventListener("click", function(){
 //     flip(this,100,-5).then(()=> flip(this,1,5))
 // })
@@ -295,96 +271,78 @@ const fadeInOut = (element, startingOpacity,changeValue, boundary,interval)=>{
 
 
 
-// class Timer {
-//     constructor(duration, startButton, callbacks) {
-//         this.duration = duration;
-//         this.startButton = startButton;
-        
-//         if (callbacks) {
-//             this.onStart = callbacks.onStart;
-//             this.onTick = callbacks.onTick;
-//             this.onComplete = callbacks.onComplete;
-//         }
+class Timer {
+    constructor(duration, startButton, callbacks) {
+        this.duration = duration;
+        this.startButton = startButton;
+        this.initialDuration = duration;
+        if (callbacks) {
+            this.onStart = callbacks.onStart;
+            this.onTick = callbacks.onTick;
+            this.onComplete = callbacks.onComplete;
+        }
 
-//         // this.startButton.addEventListener("click", this.start)
+        // this.startButton.addEventListener("click", this.start)
 
-//     }
-//     start = () => {
-//         if(this.onStart){
-//             this.onStart(this.timeRemaining);
-//         }
-//         this.tick();
-//         this.interval = setInterval(this.tick, 10);
-//     }
-//     stop = () => {
-//         clearInterval(this.interval)
-//         this.timeRemaining = duration;
+    }
+    start = () => {
+        if(this.onStart){
+            this.onStart(this.timeRemaining);
+        }
+        this.tick();
+        this.interval = setInterval(this.tick, 10);
+    }
+    stop = () => {
+        clearInterval(this.interval)
+        this.timeRemaining = this.initialDuration;
         
-//     };
-//     tick = () =>{
+    };
+    tick = () =>{
         
-//         if (this.timeRemaining <= 0){
+        if (this.timeRemaining <= 0){
 
-//             this.stop();
+            this.stop();
             
-//             if(this.onComplete){
-//                 this.onComplete(this.timeRemaining);
-//             }
-//         } else {
-//             this.timeRemaining = this.timeRemaining -0.01;
-//             if(this.onTick){
-//                 this.onTick(this.timeRemaining);
-//             }
-//         }
-//     }
-//     get timeRemaining() {
-//         return this.duration
-//     }
-//     set timeRemaining(time) {
-//         this.duration = time
-//     }
-// }
-
-
-
-
-// const timer = new Timer(introToLevelDuration/1000,startButton, {
-//     onStart(totalDuration) {
-//         circle.style.opacity = 1;
-//         duration = totalDuration;
-
-//     },
-
-//     onTick(timeRemaining) {
-//         circle.setAttribute("stroke-dashoffset",
-//         perimeter * timeRemaining /duration - perimeter);
-        
-        
-
-//     },
-//     onComplete(totalDuration) {
-        
-//         circle.setAttribute("stroke-dashoffset",0)
-//         circle.style.opacity = 0;
-//     }
-
-
-// })
-
-function circularTimer(duration) {
-    let timer = duration;
-    circle.style.opacity = 1;
-    const circularTimerInterval = setInterval(()=>{
-        timer = timer -0.01;
-        circle.setAttribute("stroke-dashoffset",
-        perimeter * timer /duration - perimeter);
-        if (timer <= 0){
-
-            clearInterval(circularTimerInterval)
-            timer = duration
-            circle.setAttribute("stroke-dashoffset",0)
-            circle.style.opacity = 0;
+            if(this.onComplete){
+                this.onComplete(this.timeRemaining);
             }
-    }, 10)
-  
+        } else {
+            this.timeRemaining = this.timeRemaining -0.01;
+            if(this.onTick){
+                this.onTick(this.timeRemaining);
+            }
+        }
+    }
+    get timeRemaining() {
+        return this.duration
+    }
+    set timeRemaining(time) {
+        this.duration = time.toFixed(2);
+    }
 }
+
+
+
+
+const timer = new Timer(introToLevelDuration/1000,startButton, {
+    onStart(totalDuration) {
+        circle.style.opacity = 1;
+        duration = totalDuration;
+
+    },
+
+    onTick(timeRemaining) {
+        circle.setAttribute("stroke-dashoffset",
+        perimeter * timeRemaining /duration - perimeter);
+        
+        
+
+    },
+    onComplete(totalDuration) {
+        
+        circle.setAttribute("stroke-dashoffset",0)
+        circle.style.opacity = 0;
+    }
+
+
+})
