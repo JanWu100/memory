@@ -1,90 +1,133 @@
 
-let levelSize = 8;
+let levelSize = 4;
 const shapes = ["maze1","maze2","maze3","maze4","maze5"];
 const colors = ["#0C4767","#EB5160","#66A182","#06BCC1","blue"];
-
 let deck = [];
 let cardsDrawn = 0;
 let solved = 0;
-let introToLevelDuration = 3000;
+let startingDuration = 3000;
+let introToLevelDuration = startingDuration;
 let level = 1;
 let playerScore = 0;
+let shamefulCounter = 0;
+let highscores = [];
+let basePoints = 500;
 
-// function getTime(){
-//     date = new Date();
-    
-//     let miliseconds = date.getMilliseconds();
-//     let seconds = date.getSeconds()
-//     return levelStart = parseFloat(seconds +"." +miliseconds);
-// }
-
-
-
-let pointsFormula = 500;
-
-const win = document.querySelector("#win")
-
+const win = document.querySelector("#win");
 const points = document.querySelector(".points");
-const floatingPoints = document.querySelector(".floating-points");
+
+function countdown(number){
+    const counter = document.querySelector("#countdown");
+    counter.style.opacity = 1;
+    counter.innerHTML = number;
+    const countdownInterval = setInterval(() => {
+        if (number === 1) {
+            clearInterval(countdownInterval);
+            counter.innerHTML = ``;
+            counter.style.opacity = 0;
+        } else {
+        number = number-1;
+        counter.innerHTML = number;
+        }; 
+    }, 1000);
+};
+
+function floatingPoints(amount,posX,posY,fpn=1){
+    const fp = document.querySelector(`.fp${fpn}`); 
+    fp.innerHTML = `${parseInt(amount)}`;
+    fp.style.left = (posX)+"px";
+    fp.style.top = (posY)+"px";
+    const float = setInterval(()=>{
+        posY = posY - 1;
+        fp.style.top = (posY)+"px";
+    },10);
+    fadeInOut(fp,0,0.05,1,20).then(()=>fadeInOut(fp,1,-0.05,0,20,200)).then(()=>{
+        clearInterval(float);
+    });
+};
 
 
 
-function createLevel() {
-    
+
+
+
+function createLevel() { 
     deck = [];
     shuffle(shapes);
     shuffle(colors);
-
         for (let i = 0; i < levelSize/2 ; i++){
             deck.push({shape: shapes[i], color: colors[i]});
             deck.push({shape: shapes[i], color: colors[i]});
-
         }
     shuffle(deck);
     return deck;
 }
 
 function shuffle(arr) {
-    
     for (let i = arr.length -1; i>0; i--) {
         let j = Math.floor(Math.random()*(i+1));
         [arr[i],arr[j]] = [arr[j], arr[i]];
-    }
-}
+    };
+};
 
 
 
 function displayPlayerScore() {
-    points.innerHTML = `<h4>Player points: <span class="player-score">${playerScore}</span></h4>`
+    points.innerHTML = `
+    <div>
+        <h2>Level ${level}</h2>
+    </div>
+    <div>
+        <h4>Player points: <span class="player-score">${playerScore}</span></h4>
+    </div>`
 }
 
 
 
+// const trans = {
+//     position: -140, 
+//     moveX(){
+//         // document.querySelector("#transition").style.left = `${this.position}%`; 
+
+//         this.position+=4;
+//         console.log(this.position) 
+
+//     },
+//     start() {
+        
+//         setInterval(this.moveX, 1000);
+//         // if (this.position > 140 ){
+//         //     this.reset();
+//         //     console.log("more")
+//         // } else {
+//         //     console.log("less")
+//         // }
+//     },
+//     reset(){
+//         this.position = -140
+//         clearInterval(transitionInterval)
+//     }
+// }
 
 const startLevel = ()=>{
 
-    
+    shamefulCounter=0;
    
     
 
-    document.querySelector(".welcome-screen").classList.add("hidden");
-    
+    displayPlayerScore();   
     let currentLevel = createLevel();
     circularTimer(introToLevelDuration/1000)
   
-    function abc(event) {
-        // console.log(solved)
-        // console.log(this)
-        // flip(this,100,-20).then(()=> flip(this,1,20))
-        // console.log(this)
+    function cardClicked(event) {
+
         this.classList.add("obrocik");
-        this.classList.remove("fade-in");
         cardsDrawn++;
         setTimeout(()=>{
             this.classList.remove("card-back");
         },200)
         
-        this.removeEventListener("click", abc);
+        this.removeEventListener("click", cardClicked);
         if (cardsDrawn === 1) {
             firstSelectedCard = this.dataset.value;
         }
@@ -95,50 +138,42 @@ const startLevel = ()=>{
         if (cardsDrawn > 1 && firstSelectedCard === secondSelectedCard) {
             solved++;
             cardsDrawn = 0
+            shamefulCounter++;
+            let awardPoints = (basePoints - (25*levelTimer.read()));
             let posX = event.clientX -20;
             let posY = event.clientY -100;
-            floatingPoints.innerHTML = `${pointsFormula}`
 
-            floatingPoints.style.left = (posX)+"px";
-            floatingPoints.style.top = (posY)+"px";
-            const float = setInterval(()=>{
-                posY = posY - 1;
-                floatingPoints.style.top = (posY)+"px";
-            },10)
-
-
-            fadeInOut(floatingPoints,0,0.05,1,30).then(()=>fadeInOut(floatingPoints,1,-0.05,0,30)).then(()=>{
-                clearInterval(float);
-            })
-            playerScore = playerScore + pointsFormula;
+            if (shamefulCounter%2 === 0){
+                floatingPoints(awardPoints,posX,posY,1);
+            } else {
+                floatingPoints(awardPoints,posX,posY,2);
+            }
+            playerScore = parseInt(playerScore + awardPoints);
+            displayPlayerScore();
 
 
         }
         if (cardsDrawn > 1 && firstSelectedCard !== secondSelectedCard) {
             let currentCards = document.querySelectorAll(".cardoo");
                 currentCards.forEach((card)=>{
-                    card.removeEventListener("click", abc);
+                    card.removeEventListener("click", cardClicked);
                 })    
                 setTimeout(hideCards, introToLevelDuration);
                 level = 1;
+                playerScore = 0;
+                introToLevelDuration = startingDuration;
+                
         }
         if (solved === levelSize/2){
-            // setTimeout(()=>{
-            //     win.innerHTML = `
-                
-            //     <h1>You win</h1>
-            //     <button id="start2">Start game</button>
-            //     `
-            //     win.classList.add("win");
-            //     document.querySelector("#start2").addEventListener("click",startLevel)
-            // }, 1000);
+
+            levelTimer.stop();
             displayPlayerScore();
             const advanceLevel = document.querySelector("#advance")
-            introToLevelDuration = introToLevelDuration-100;
+            introToLevelDuration = introToLevelDuration-500;
             level++;
             advanceLevel.innerHTML = `<h3>Level ${level}</h3>`
             setTimeout(()=>{
-                fadeInOut(advanceLevel,0,.05,1,20).then(()=> fadeInOut(advanceLevel,1,-.05,0,30))
+                fadeInOut(advanceLevel,0,.05,1,20).then(()=> fadeInOut(advanceLevel,1,-.05,0,20,100))
                 setTimeout(startLevel, 500);
 
             },1500)
@@ -156,22 +191,23 @@ const startLevel = ()=>{
         cardoo.setAttribute("data-value",`${card.shape}`)
         
         cardoo.innerHTML = `
-            
+            <div class="testowe">
+            </div>
             <img src="files/${card.shape}.svg" onload="SVGInject(this)" fill=${card.color}></img>
-        
+
         
         `;
         levelWrapper.appendChild(cardoo);
     })
     let currentCards = document.querySelectorAll(".cardoo");
-    currentCards.forEach(card =>{
-        card.classList.add("fade-in");
-    })
+    
 
     function hideCards() {
         solved = 0;
         cardsDrawn = 0
-        
+        displayPlayerScore();
+
+        // trans.start();
         const myInterval = setInterval(transition, 6);
             let elementPosition = -140;
             function transition() {
@@ -185,12 +221,13 @@ const startLevel = ()=>{
                 }
             }
         setTimeout(()=>{
+            levelTimer.start()
+
             currentCards.forEach((card)=>{
                 card.classList.add("card-back");
                 
                 card.classList.remove("obrocik");
-                card.classList.remove("fade-in");
-                card.addEventListener("click", abc);
+                card.addEventListener("click", cardClicked);
             })
         }, 50);
  
@@ -202,50 +239,21 @@ const startLevel = ()=>{
     setTimeout(hideCards, introToLevelDuration);
 
    
-    win.innerHTML = ``;
-    win.classList.remove("win");
+
 
 
 }
 
 
-document.querySelector("#start").addEventListener("click",startLevel)
+document.querySelector("#start").addEventListener("click",()=>{
+    document.querySelector(".welcome-screen").classList.add("hidden");
+
+    countdown(3)
+    setTimeout(startLevel,3000)
+})
 
 
 
-
-
-// const tescik = document.querySelector(".tescik")
-// const flip = (element, startingWidth,changeValue)=>{
-//     return new Promise((resolve,reject)=>{
-//     let elementWidth = startingWidth;
-
-//         const myInterval = setInterval(()=>{
-//             element.style.width = `${elementWidth}%`;
-//             elementWidth = elementWidth + changeValue;
-//             if (elementWidth > 100 + changeValue) {
-//                 elementWidth = 100;
-//                 clearInterval(myInterval);
-//                 resolve()
-//             }
-//             if (elementWidth < 0 + changeValue) {
-
-//                 clearInterval(myInterval);
-//                 resolve()
-//             }
-
-//         }, 40);
-        
-//     });
-// };
-
-
-
-
-
-// tescik.addEventListener("click", function(){
-//     flip(this,100,-5).then(()=> flip(this,1,5))
-// })
 
 
 
@@ -263,22 +271,25 @@ let duration;
 
 
 
-const fadeInOut = (element, startingOpacity,changeValue, boundary,interval)=>{
+const fadeInOut = (element, startingOpacity,changeValue, boundary,interval,timeout=0)=>{
     return new Promise((resolve,reject)=>{
     let opacity = startingOpacity;
   
+        setTimeout(()=>{
+            const myInterval = setInterval(()=>{
+                element.style.opacity = `${opacity}`;
+                opacity = opacity + changeValue;
+                if ((opacity > boundary && changeValue > 0) || (opacity < boundary && changeValue< 0)) {
+                    clearInterval(myInterval);
+                    element.style.opacity = boundary;
+                    resolve()
+                }
+             
+    
+            }, interval);
 
-        const myInterval = setInterval(()=>{
-            element.style.opacity = `${opacity}`;
-            opacity = opacity + changeValue;
-            if ((opacity > boundary && changeValue > 0) || (opacity < boundary && changeValue< 0)) {
-                clearInterval(myInterval);
-                element.style.opacity = boundary;
-                resolve()
-            }
-         
+        },timeout)
 
-        }, interval);
         
     });
 };
@@ -287,89 +298,6 @@ const fadeInOut = (element, startingOpacity,changeValue, boundary,interval)=>{
 
 
 
-// tescik.addEventListener("click", function(){
-//     flip(this,100,-5).then(()=> flip(this,1,5))
-// })
-
-
-
-
-
-// class Timer {
-//     constructor(duration, startButton, callbacks) {
-//         this.duration = duration;
-//         this.startButton = startButton;
-        
-//         if (callbacks) {
-//             this.onStart = callbacks.onStart;
-//             this.onTick = callbacks.onTick;
-//             this.onComplete = callbacks.onComplete;
-//         }
-
-//         // this.startButton.addEventListener("click", this.start)
-
-//     }
-//     start = () => {
-//         if(this.onStart){
-//             this.onStart(this.timeRemaining);
-//         }
-//         this.tick();
-//         this.interval = setInterval(this.tick, 10);
-//     }
-//     stop = () => {
-//         clearInterval(this.interval)
-//         this.timeRemaining = duration;
-        
-//     };
-//     tick = () =>{
-        
-//         if (this.timeRemaining <= 0){
-
-//             this.stop();
-            
-//             if(this.onComplete){
-//                 this.onComplete(this.timeRemaining);
-//             }
-//         } else {
-//             this.timeRemaining = this.timeRemaining -0.01;
-//             if(this.onTick){
-//                 this.onTick(this.timeRemaining);
-//             }
-//         }
-//     }
-//     get timeRemaining() {
-//         return this.duration
-//     }
-//     set timeRemaining(time) {
-//         this.duration = time
-//     }
-// }
-
-
-
-
-// const timer = new Timer(introToLevelDuration/1000,startButton, {
-//     onStart(totalDuration) {
-//         circle.style.opacity = 1;
-//         duration = totalDuration;
-
-//     },
-
-//     onTick(timeRemaining) {
-//         circle.setAttribute("stroke-dashoffset",
-//         perimeter * timeRemaining /duration - perimeter);
-        
-        
-
-//     },
-//     onComplete(totalDuration) {
-        
-//         circle.setAttribute("stroke-dashoffset",0)
-//         circle.style.opacity = 0;
-//     }
-
-
-// })
 
 function circularTimer(duration) {
     let timer = duration;
@@ -387,4 +315,26 @@ function circularTimer(duration) {
             }
     }, 10)
   
+}
+
+
+const levelTimer = { 
+    start() {   
+        this.time = 0;        
+        this.startLevelTimerInterval = setInterval(()=>{
+            if(this.time >= 20){
+               this.stop(); 
+            } else {
+            this.time= this.time +0.01;
+            }
+        }, 10)     
+    },
+    stop() {
+        clearInterval(this.startLevelTimerInterval)
+        this.time = 20;
+    },
+    read() {
+        let num = (this.time).toFixed(2);
+        return parseFloat(num);
+    }
 }

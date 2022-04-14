@@ -1,6 +1,8 @@
 :root {
   --color-primary: #0c4767;
   --color-background: #F6E7CB;
+  --card-width: 180px;
+  
 }
 *,
 *::after,
@@ -16,13 +18,37 @@
 } */
 
 
-
 body {
     background-color: var(--color-background);
     color: var(--color-primary);
     overflow: hidden;
     font-family: 'Roboto', sans-serif;
 }
+
+#mobile{
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  font-size: 4rem;
+  align-items: center;
+  color: var(--color-background);
+  font-weight: 900;
+  text-align: center;
+  background-color: var(--color-primary);
+  opacity: 0;
+  pointer-events: none;
+}
+@media screen and (max-width: 600px) {
+  #mobile {
+    opacity: 1;
+  pointer-events: all;
+
+  }
+ }
 
 
 
@@ -74,7 +100,23 @@ h4 {
   background-color: #0C4767;
   background-image: url(../files/Maze_bg.svg);
   background-size: cover;
+  border: 18px solid var(--color-primary);
  
+}
+
+.testowe {
+  display: none;
+}
+.card-back .testowe {
+  display: inline;
+  width: 100%;
+  height: 100%;
+  
+  background-color: none;
+  border-radius: 8px;
+  border: 2px solid var(--color-background);
+
+
 }
 
 .card-back svg{
@@ -86,8 +128,8 @@ h4 {
   position: absolute;
   z-index: 2;
   display: grid;
-  grid-template-columns: repeat(4, 180px);
-  grid-template-rows: repeat(2,300px);
+  grid-template-columns: repeat(4, var(--card-width));
+  
   gap: 20px;
 }
 
@@ -97,7 +139,7 @@ h4 {
   border-radius: 15px;
   width: 100%;
   justify-self: center;
-  height: 100%;
+  height: calc(1.5*var(--card-width));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -134,12 +176,18 @@ h4 {
  
 }
 
-.fade-in {
+#advance.lost {
+  pointer-events: all;
+  opacity: 1;
+  background-color: #0c4767;
+  color: #e3d4ba;
+}
+/* .fade-in {
   
   animation-name: fadeIn;
   animation-duration: 0.6s;
   
-}
+} */
 
 
 .win {
@@ -184,12 +232,7 @@ h4 {
 
 }
 
-.dynamic-points {
-  position: absolute;
-  font-size: 10rem;
-  color: #0c4767;
-  z-index: 10;
-}
+
 
 #advance{
   position: absolute;
@@ -201,6 +244,23 @@ h4 {
   align-items: center;
   text-align: center;
   background-color: rgb(245, 227, 194);
+  opacity: 0;
+  pointer-events: none;
+}
+
+#countdown{
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 15rem;
+  align-items: center;
+  color: var(--color-background);
+  font-weight: 900;
+  text-align: center;
+  background-color: var(--color-primary);
   opacity: 0;
   pointer-events: none;
 }
@@ -238,4 +298,5 @@ nav {
   font-weight: 900;
   opacity: 0;
   transition: transform 0.4;
+  pointer-events: none;
 }

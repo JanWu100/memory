@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/css/normalize.css" />
-    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="./css/normalize.css" />
+    <link rel="stylesheet" href="./css/styles.css" />
     <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
@@ -21,10 +21,13 @@
       <div class="points"></div>
     </nav>
     <div id="transition"></div>
+    <div id="mobile">Not supported yet :(</div>
     <div class="container">
         
         <div class="main-wrapper">
           <div id="advance"><h3>Level 2</h3></div>
+          <div id="countdown"></div>
+
           <div class="welcome-screen">
             <h2>Welcome to</h2>
             <img src="files/Memory_Logo.svg" />
@@ -41,7 +44,9 @@
             <input type="text">
             <button id="start">Start game</button>
           </div>
-          <div class="floating-points"></div>
+          <div class="floating-points fp1"></div>
+          <div class="floating-points fp2"></div>
+
 
 
           <div class="timer">
@@ -51,7 +56,7 @@
               cx="1500" 
               cy="1500"
               fill="transparent"
-              stroke="rgb(245, 227, 194)"
+              stroke="rgb(242, 221, 181)"
               stroke-width="1500"
               opacity="0"
               transform="rotate(-90 1500 1500)"></circle>
