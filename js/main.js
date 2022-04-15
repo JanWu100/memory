@@ -1,5 +1,6 @@
 
-let levelSize = 4;
+let levelSize = 8;
+let playerName = "";
 const shapes = ["maze1","maze2","maze3","maze4","maze5"];
 const colors = ["#0C4767","#EB5160","#66A182","#06BCC1","blue"];
 let deck = [];
@@ -9,6 +10,7 @@ let startingDuration = 3000;
 let introToLevelDuration = startingDuration;
 let level = 1;
 let playerScore = 0;
+let playerHighestScore = 0;
 let shamefulCounter = 0;
 let highscores = [];
 let basePoints = 500;
@@ -19,6 +21,8 @@ let timerHeight = window.innerHeight;
 const levelWrapper = document.querySelector(".current-level");
 const contentWrapper = document.querySelector("#content-wrapper");
 const win = document.querySelector("#win");
+
+const nav = document.querySelector(".nav");
 const points = document.querySelector(".points");
 const timerWrapper = document.querySelector("#timer");
 
@@ -38,7 +42,7 @@ contentWrapper.innerHTML = `
         </p>
     
     <input type="text" class="input" placeholder="Your Name">
-    <button id="start" class="btn">Start game</button>
+    <button id="start" class="btn btn__primary">Start game</button>
 </section>
 `
 
@@ -112,18 +116,54 @@ function shuffle(arr) {
     };
 };
 
+displayPlayerScore()
 
+nav.innerHTML = `
+   
+<div class="nav-left">
+<img src="files/amaze_Logo.svg" class="logo-nav"/>
+   
+</div>
+<div class="nav-center">
+<span class="level">Level ${level}</span>
+<span class="time-to-start hidden">Starting in: <span id="time-to-start">2.00<span>
+</div>
+<div class="nav-right">
+<span class="player">Playing as: <strong id="player-name">Guest</strong></span>
+</div>
+`
 
 function displayPlayerScore() {
-    points.innerHTML = `
-    <div>
-        <h2>Level ${level}</h2>
-    </div>
-    <div>
-        <h4>Player points: <span class="player-score">${playerScore}</span></h4>
-        <p>player lives: ${playerLives}</p>
-    </div>`
+
+points.innerHTML = `
+<p class="score">Score: <strong>${playerScore}</strong></p>
+<p class="score">Your highest score: <strong>${playerHighestScore}</strong></p>
+
+<div class="lives">player lives: ${playerLives}</div> 
+`
+if (playerLives===2){
+    document.querySelector(".lives").innerHTML = `
+    <svg width="20" height="18" viewBox="0 0 20 18"  fill="#0C4767" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
+    </svg>
+    <svg width="20" height="18" viewBox="0 0 20 18"  fill="#0C4767" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
+    </svg>
+`
+} else {
+    document.querySelector(".lives").innerHTML = `
+    <svg width="20" height="18" viewBox="0 0 20 18"  fill="#0C4767" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
+    </svg>
+    <svg stroke="#0C4767""
+    stroke-width="2" width="20" height="18" viewBox="-1 -1 22 20"  fill="none" stroke-c xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
+    </svg>
+` 
 }
+}
+
+
 
 
 
@@ -182,6 +222,10 @@ function cardClicked(event) {
             floatingPoints(awardPoints,posX,posY,2);
         }
         playerScore = parseInt(playerScore + awardPoints);
+        if (playerScore > playerHighestScore){
+            playerHighestScore = playerScore
+
+        }
         displayPlayerScore();
 
 
@@ -198,8 +242,22 @@ function cardClicked(event) {
 };
 
 
+
 const startLevel = ()=>{
+    levelSize = 8;
+    levelWrapper.classList.remove("grid-1x5");
+    levelWrapper.classList.add("grid-1x4");
+    contentWrapper.classList.remove("lose-screen");
+    contentWrapper.classList.add("hidden");
+    document.querySelector("#navbar").classList.remove("hidden");
+    document.querySelector(".level").innerHTML = `Level ${level}`;
     shamefulCounter=0;
+    if( level === 10) {
+        console.log("yes u made it")
+        introToLevelDuration = startingDuration;
+        levelSize = 10;
+        levelWrapper.classList.replace("grid-1x4","grid-1x5")
+    }
     let currentLevel = createLevel();
     displayPlayerScore();   
 
@@ -232,9 +290,14 @@ const startLevel = ()=>{
 
 
 document.querySelector("#start").addEventListener("click",()=>{
+
+    if (document.querySelector("input").value){
+    document.querySelector("#player-name").innerHTML = document.querySelector("input").value;
+
+    }
     contentWrapper.classList.add("hidden");
     contentWrapper.innerHTML = ``;
-
+    
     countdown(3)
     setTimeout(startLevel,3000)
 })
@@ -279,6 +342,7 @@ function winLevel() {
     
     introToLevelDuration = introToLevelDuration-introDurationDeduction;
     level++;
+
     contentWrapper.innerHTML = `<h3>Level ${level}</h3>`
     fadeInOut(levelWrapper, 1,-0.1, 0,50,1500);
     setTimeout(()=>{
@@ -292,6 +356,36 @@ function winLevel() {
 
 function loseGame() {
     if( playerLives === 1) {
+        contentWrapper.style.opacity = 0;
+        contentWrapper.classList.add("lose-screen");
+
+        contentWrapper.innerHTML = `
+        <div class="lost">
+        <h1> You lose </h1>
+        <p>Your score: <strong>${playerScore}</strong></p>
+        <p>Your highest score: <strong>${playerHighestScore}</strong></p>
+        <button id="start" class="btn btn__inverse">Try again</button>
+        </div>
+        
+        
+        `
+        document.querySelector("#start").addEventListener("click",()=>{
+            contentWrapper.classList.add("hidden");
+            contentWrapper.innerHTML = ``;
+        
+            countdown(3)
+            setTimeout(startLevel,3000)
+        })
+        fadeInOut(levelWrapper, 1,-0.1, 0,50,1500);
+        setTimeout(()=>{
+            fadeInOut(contentWrapper,0,.05,1,20).then(()=>{
+        contentWrapper.classList.remove("hidden");
+
+            })
+            
+    
+        },1500)
+
         let currentCards = document.querySelectorAll(".cardoo");
         currentCards.forEach((card)=>{
             card.removeEventListener("click", cardClicked);
@@ -301,8 +395,12 @@ function loseGame() {
         playerScore = 0;
         playerLives = 2;
         introToLevelDuration = startingDuration;
-        countdown(3)
-        setTimeout(startLevel,3000)
+        // countdown(3)
+        // setTimeout(startLevel,3000)
+
+
+
+
     } else {
         playerLives--;
         let currentCards = document.querySelectorAll(".cardoo");
@@ -362,6 +460,9 @@ function circularTimer(duration) {
     let timer = duration;
     timerWidth = window.innerWidth;
     timerHeight = window.innerHeight;   
+    document.querySelector("#time-to-start").innerHTML = timer;
+    document.querySelector("#time-to-start").parentElement.classList.remove("hidden");
+
     document.querySelector("#timer-container").setAttribute("width", timerWidth);
     document.querySelector("#timer-container").setAttribute("height", timerHeight);
 
@@ -374,16 +475,25 @@ function circularTimer(duration) {
 
 
     const circularTimerInterval = setInterval(()=>{
-        timer = timer -0.01;
-        circle.setAttribute("stroke-dashoffset",
-        perimeter * timer /duration - perimeter);
         if (timer <= 0){
 
             clearInterval(circularTimerInterval)
             timer = duration
             circle.setAttribute("stroke-dashoffset",0)
             circle.style.opacity = 0;
+            document.querySelector("#time-to-start").parentElement.classList.add("hidden");
+
+
+            } else {
+                timer = timer -0.01;
+                document.querySelector("#time-to-start").innerHTML = parseFloat(timer).toFixed(2);
+        
+                circle.setAttribute("stroke-dashoffset",
+                perimeter * timer /duration - perimeter);
+
             }
+
+        
     }, 10)
   
 }
