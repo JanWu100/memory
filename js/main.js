@@ -1,8 +1,9 @@
 
-let levelSize = 8;
+let levelSize = 4;
 let playerName = "";
-const shapes = ["maze1","maze2","maze3","maze4","maze5"];
-const colors = ["#0C4767","#EB5160","#66A182","#06BCC1","blue"];
+const shapes = ["maze1","maze2","maze3","maze4","maze5","maze6"];
+const colors = ["#0C4767","#EB5160","#66A182","#06BCC1","blue","grey"];
+// const colorsBoss = ["#0C4767","#0C4767","#0C4767","#0C4767","#0C4767","#0C4767",]
 let deck = [];
 let cardsDrawn = 0;
 let solved = 0;
@@ -11,26 +12,25 @@ let introToLevelDuration = startingDuration;
 let level = 1;
 let playerScore = 0;
 let playerHighestScore = 0;
-let shamefulCounter = 0;
+let floatingPointsPosition = 0;
 let highscores = [];
 let basePoints = 500;
 let playerLives = 2;
-let introDurationDeduction = 100;
+let introDurationDeduction = 200;
 let timerWidth = window.innerWidth;
 let timerHeight = window.innerHeight;
 const levelWrapper = document.querySelector(".current-level");
 const contentWrapper = document.querySelector("#content-wrapper");
 const win = document.querySelector("#win");
-
+const gameColor = document.querySelector("#game")
 const nav = document.querySelector(".nav");
-const points = document.querySelector(".points");
 const timerWrapper = document.querySelector("#timer");
 
 
 contentWrapper.innerHTML = `
 <section class="welcome-screen">
     <span class="welcome-message">Welcome to</span>
-    <img src="files/amaze_Logo.svg" class="logo"/>
+    <img src="./files/amaze_logo.svg" class="logo"/>
 
 
     
@@ -53,7 +53,7 @@ timerWrapper.innerHTML = `
     cx="${timerWidth/2}" 
     cy="${timerHeight/2}"
     fill="transparent"
-    stroke="rgb(242, 221, 181)"
+    stroke="rgba(0, 0, 0, 0.05)"
     stroke-width="${Math.max(timerWidth*2,timerHeight*2)}"
     opacity="0"
     transform="rotate(-90 ${timerWidth/2} ${timerHeight/2})"></circle>
@@ -97,14 +97,25 @@ function floatingPoints(amount,posX,posY,fpn=1){
 
 
 
-function createLevel() { 
+function createLevel(isBoss = 0) { 
+    if (isBoss === 1){
+
+    }
     deck = [];
     shuffle(shapes);
     shuffle(colors);
+    if (isBoss === 1){
+        for (let i = 0; i < levelSize/2 ; i++){
+            deck.push({shape: shapes[i], color: "#0C4767"});
+            deck.push({shape: shapes[i], color: "#0C4767"});
+        } 
+    } else {
         for (let i = 0; i < levelSize/2 ; i++){
             deck.push({shape: shapes[i], color: colors[i]});
             deck.push({shape: shapes[i], color: colors[i]});
         }
+    }
+
     shuffle(deck);
     return deck;
 }
@@ -116,15 +127,16 @@ function shuffle(arr) {
     };
 };
 
-displayPlayerScore()
 
 nav.innerHTML = `
    
-<div class="nav-left">
-<img src="files/amaze_Logo.svg" class="logo-nav"/>
+<div class="nav-left points">
+<p class="score">Score: <strong>${playerScore} pts</strong></p>
+<p class="score">Your highest score: <strong>${playerHighestScore} pts</strong></p>
    
 </div>
 <div class="nav-center">
+<span class="lives"></span>
 <span class="level">Level ${level}</span>
 <span class="time-to-start hidden">Starting in: <span id="time-to-start">2.00<span>
 </div>
@@ -132,38 +144,55 @@ nav.innerHTML = `
 <span class="player">Playing as: <strong id="player-name">Guest</strong></span>
 </div>
 `
+displayPlayerScore()
 
 function displayPlayerScore() {
+const points = document.querySelector(".points");
 
-points.innerHTML = `
-<p class="score">Score: <strong>${playerScore}</strong></p>
-<p class="score">Your highest score: <strong>${playerHighestScore}</strong></p>
 
-<div class="lives">player lives: ${playerLives}</div> 
-`
-if (playerLives===2){
-    document.querySelector(".lives").innerHTML = `
-    <svg width="20" height="18" viewBox="0 0 20 18"  fill="#0C4767" xmlns="http://www.w3.org/2000/svg">
-        <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
-    </svg>
-    <svg width="20" height="18" viewBox="0 0 20 18"  fill="#0C4767" xmlns="http://www.w3.org/2000/svg">
-        <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
-    </svg>
-`
-} else {
-    document.querySelector(".lives").innerHTML = `
-    <svg width="20" height="18" viewBox="0 0 20 18"  fill="#0C4767" xmlns="http://www.w3.org/2000/svg">
-        <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
-    </svg>
-    <svg stroke="#0C4767""
-    stroke-width="2" width="20" height="18" viewBox="-1 -1 22 20"  fill="none" stroke-c xmlns="http://www.w3.org/2000/svg">
-        <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
-    </svg>
-` 
+    points.innerHTML = `
+    <p class="score">Score: <strong>${playerScore} pts</strong></p>
+    <p class="score">Your highest score: <strong>${playerHighestScore} pts</strong></p>
+    
+    
+    `
+    if (playerLives===2){
+        document.querySelector(".lives").innerHTML = `
+        <svg width="20" height="18" viewBox="0 0 20 18"  fill="#EB5160" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
+        </svg>
+        <svg width="20" height="18" viewBox="0 0 20 18"  fill="#EB5160" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
+        </svg>
+    `
+    } else {
+        document.querySelector(".lives").innerHTML = `
+        <svg width="20" height="18" viewBox="0 0 20 18"  fill="#EB5160" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
+        </svg>
+        <svg stroke="#EB5160""
+        stroke-width="2" width="20" height="18" viewBox="-1 -1 22 20"  fill="none" stroke-c xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
+        </svg>
+    ` 
+    }
 }
+
+function noMoreLives() {
+    return new Promise(resolve =>{
+        document.querySelector(".lives").innerHTML = `
+        <svg stroke="#EB5160""
+        stroke-width="2" width="20" height="18" viewBox="-1 -1 22 20"  fill="none" stroke-c xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
+        </svg>
+        <svg stroke="#EB5160""
+        stroke-width="2" width="20" height="18" viewBox="-1 -1 22 20"  fill="none" stroke-c xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
+        </svg>
+    ` 
+    resolve();
+    })
 }
-
-
 
 
 
@@ -195,6 +224,7 @@ if (playerLives===2){
 function cardClicked(event) {
 
     this.classList.add("obrocik");
+
     cardsDrawn++;
     setTimeout(()=>{
         this.classList.remove("card-back");
@@ -211,12 +241,12 @@ function cardClicked(event) {
     if (cardsDrawn > 1 && firstSelectedCard === secondSelectedCard) {
         solved++;
         cardsDrawn = 0
-        shamefulCounter++;
+        floatingPointsPosition++;
         let awardPoints = (basePoints - (25*levelTimer.read()));
         let posX = event.clientX -20;
         let posY = event.clientY -100;
 
-        if (shamefulCounter%2 === 0){
+        if (floatingPointsPosition%2 === 0){
             floatingPoints(awardPoints,posX,posY,1);
         } else {
             floatingPoints(awardPoints,posX,posY,2);
@@ -234,31 +264,59 @@ function cardClicked(event) {
         loseGame();
             
     }
-    if (solved === levelSize/2){
+    if (solved === levelSize/2 && level === 9){
+        bossChallenge();
+    } else if (solved === levelSize/2 && level === 19){
+        bossChallenge();
+    } else if (solved === levelSize/2 && level === 29){
+        bossChallenge();
+    } else if (solved === levelSize/2 && level === 39){
+        bossChallenge();
+    } else if (solved === levelSize/2){
 
         winLevel();
 
     }
+
 };
 
 
 
-const startLevel = ()=>{
-    levelSize = 8;
-    levelWrapper.classList.remove("grid-1x5");
-    levelWrapper.classList.add("grid-1x4");
+const startLevel = (isBoss)=>{
+    // levelSize = 4;
+
+    // levelWrapper.classList.remove("grid-1x3");
+    // levelWrapper.classList.remove("grid-1x4");
+    // levelWrapper.classList.remove("grid-1x5");
+    // levelWrapper.classList.add("grid-1x4");
+
     contentWrapper.classList.remove("lose-screen");
     contentWrapper.classList.add("hidden");
+
     document.querySelector("#navbar").classList.remove("hidden");
     document.querySelector(".level").innerHTML = `Level ${level}`;
-    shamefulCounter=0;
-    if( level === 10) {
-        console.log("yes u made it")
+    floatingPointsPosition=0;
+
+    if( level === 41) {
+        introToLevelDuration = startingDuration;
+        levelSize = 12;
+        levelWrapper.classList.replace("grid-1x5","grid-1x3")
+    } else if( level === 31) {
         introToLevelDuration = startingDuration;
         levelSize = 10;
         levelWrapper.classList.replace("grid-1x4","grid-1x5")
+    } else if( level === 21) {
+        introToLevelDuration = startingDuration;
+        levelSize = 8;
+        levelWrapper.classList.replace("grid-1x3","grid-1x4")
+    } else if( level === 11) {
+        introToLevelDuration = startingDuration;
+        levelSize = 6;
+        levelWrapper.classList.replace("grid-1x4","grid-1x3")
     }
-    let currentLevel = createLevel();
+
+    let currentLevel = createLevel(isBoss);
+ 
     displayPlayerScore();   
 
     circularTimer(introToLevelDuration/1000)
@@ -277,16 +335,18 @@ const startLevel = ()=>{
         cardoo.innerHTML = `
             <div class="testowe">
             </div>
-            <img src="files/${card.shape}.svg" onload="SVGInject(this)" fill=${card.color}></img>
+            <img src="./files/${card.shape}.svg" onload="SVGInject(this)" fill=${card.color}></img>
 
         
         `;
         levelWrapper.appendChild(cardoo);
     })
-
+   
+ 
     setTimeout(hideCards, introToLevelDuration);
 
 }
+
 
 
 document.querySelector("#start").addEventListener("click",()=>{
@@ -296,6 +356,8 @@ document.querySelector("#start").addEventListener("click",()=>{
 
     }
     contentWrapper.classList.add("hidden");
+            contentWrapper.style.opacity = 0;
+
     contentWrapper.innerHTML = ``;
     
     countdown(3)
@@ -309,7 +371,12 @@ function hideCards() {
     let currentCards = document.querySelectorAll(".cardoo");
 
 
-    // trans.start();
+
+    // turnOver().then(()=>levelTimer.start())
+    // currentCards.forEach((card)=>{
+    //     card.classList.remove("obrocik2");
+    // })
+    
     const myInterval = setInterval(transition, 6);
         let elementPosition = -140;
         function transition() {
@@ -322,6 +389,7 @@ function hideCards() {
             clearInterval(myInterval);
             }
         }
+    
     setTimeout(()=>{
         levelTimer.start()
 
@@ -337,6 +405,8 @@ function hideCards() {
 }
 
 function winLevel() {
+
+
     levelTimer.stop();
     displayPlayerScore();
     
@@ -347,8 +417,38 @@ function winLevel() {
     fadeInOut(levelWrapper, 1,-0.1, 0,50,1500);
     setTimeout(()=>{
         fadeInOut(contentWrapper,0,.05,1,20)
+        .then(()=>{inverseColors(1)})
         .then(()=> fadeInOut(contentWrapper,1,-.05,0,20,300))
         .then(()=> startLevel())
+        // setTimeout(startLevel, 500);
+
+    },1500)
+}
+
+function inverseColors(result=0) {
+    return new Promise(resolve =>{
+        if (result === 0){
+            gameColor.classList.replace("game","boss");
+        } else {
+            gameColor.classList.replace("boss","game");
+        }
+        resolve();
+    })
+}
+function bossChallenge() {
+    levelTimer.stop();
+    displayPlayerScore();
+    
+    introToLevelDuration = 2000;
+    level++;
+
+    contentWrapper.innerHTML = `<h3>BOSS CHALLENGE!</h3>`
+    fadeInOut(levelWrapper, 1,-0.1, 0,50,1500);
+    setTimeout(()=>{
+        fadeInOut(contentWrapper,0,.05,1,20)
+        .then(()=>{inverseColors()})
+        .then(()=> fadeInOut(contentWrapper,1,-.05,0,20,3000))
+        .then(()=> startLevel(1))
         // setTimeout(startLevel, 500);
 
     },1500)
@@ -370,44 +470,77 @@ function loseGame() {
         
         `
         document.querySelector("#start").addEventListener("click",()=>{
+            if (gameColor.classList.contains("boss")){
+                gameColor.classList.remove("boss");
+                gameColor.classList.add("game");
+            }
             contentWrapper.classList.add("hidden");
+            contentWrapper.style.opacity = 0;
             contentWrapper.innerHTML = ``;
-        
+            levelSize = 4;
+            levelWrapper.classList.remove("grid-1x3");
+            levelWrapper.classList.remove("grid-1x4");
+            levelWrapper.classList.remove("grid-1x5");
+            levelWrapper.classList.add("grid-1x4");
             countdown(3)
             setTimeout(startLevel,3000)
         })
-        fadeInOut(levelWrapper, 1,-0.1, 0,50,1500);
-        setTimeout(()=>{
-            fadeInOut(contentWrapper,0,.05,1,20).then(()=>{
-        contentWrapper.classList.remove("hidden");
+        // fadeInOut(levelWrapper, 1,-0.1, 0,50,1500);
 
-            })
-            
-    
-        },1500)
+        const lifeOne = document.querySelector(".lives").children[0]
+        fadeInOut(lifeOne, 1,-1, 0,10)
+        .then(()=>fadeInOut(lifeOne,0,1,1,10,200))
+        .then(()=>fadeInOut(lifeOne,1,-1,0,10,200))
+        .then(()=>fadeInOut(lifeOne,0,1,1,10,200))
+        .then(()=>fadeInOut(lifeOne,1,-1,0,10,200))
+        .then(()=>fadeInOut(lifeOne,0,1,1,10,200))
+        .then(()=>fadeInOut(lifeOne,1,-1,0,10,200))
+        .then(()=>fadeInOut(lifeOne,0,1,1,10,200))
+        .then(()=>fadeInOut(lifeOne,1,-1,0,10,200))
+        .then(()=>fadeInOut(lifeOne,0,1,1,10,200))
+        .then(()=>noMoreLives())
+        .then(()=>fadeInOut(levelWrapper, 1,-0.1, 0,50)) 
+        .then(()=>fadeInOut(contentWrapper,0,.05,1,20))
+        .then(()=>{contentWrapper.classList.remove("hidden")});
+
+      
 
         let currentCards = document.querySelectorAll(".cardoo");
         currentCards.forEach((card)=>{
             card.removeEventListener("click", cardClicked);
         })    
-        // setTimeout(hideCards, introToLevelDuration);
+      
         level = 1;
         playerScore = 0;
         playerLives = 2;
         introToLevelDuration = startingDuration;
-        // countdown(3)
-        // setTimeout(startLevel,3000)
+
 
 
 
 
     } else {
+  
+
+
         playerLives--;
         let currentCards = document.querySelectorAll(".cardoo");
         currentCards.forEach((card)=>{
             card.removeEventListener("click", cardClicked);
         })    
-        setTimeout(hideCards, introToLevelDuration);
+        const lifeTwo = document.querySelector(".lives").children[1]
+        fadeInOut(lifeTwo, 1,-1, 0,10)
+        .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
+        .then(()=>fadeInOut(lifeTwo,1,-1,0,10,200))
+        .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
+        .then(()=>fadeInOut(lifeTwo,1,-1,0,10,200))
+        .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
+        .then(()=>fadeInOut(lifeTwo,1,-1,0,10,200))
+        .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
+        .then(()=>{
+            hideCards();
+        })
+        
 
 
     }
@@ -486,7 +619,7 @@ function circularTimer(duration) {
 
             } else {
                 timer = timer -0.01;
-                document.querySelector("#time-to-start").innerHTML = parseFloat(timer).toFixed(2);
+                document.querySelector("#time-to-start").innerHTML = parseFloat(timer).toFixed(1);
         
                 circle.setAttribute("stroke-dashoffset",
                 perimeter * timer /duration - perimeter);
@@ -518,4 +651,24 @@ const levelTimer = {
         let num = (this.time).toFixed(2);
         return parseFloat(num);
     }
+}
+
+function turnCardsOver(ms,card) {
+    return new Promise(resolve =>{
+        setTimeout(() => {
+            card.classList.add("card-back");      
+            card.classList.remove("obrocik");
+            card.classList.add("obrocik2");
+
+            card.addEventListener("click", cardClicked)
+            resolve()
+        }, ms);
+    })
+}
+async function turnOver() {
+    let currentLevel = document.querySelectorAll(".cardoo")
+    for (let card of currentLevel){
+         await turnCardsOver(200,card)
+    }
+
 }
