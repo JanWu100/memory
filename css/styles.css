@@ -1,6 +1,9 @@
 :root {
-  --color-primary: #0c4767;
-  --color-background: #F6E7CB;
+  /* --color-primary: #0c4767;
+  --color-background: #F6E7CB; */
+  --color-primary: #F6E7CB;
+  --color-background: #0c4767;
+  
   --card-width: 160px;
   --card-gap: 16px;
 }
@@ -32,8 +35,8 @@ body {
 
 }
 .boss {
-  background-color: var(--color-primary);
-  color: var(--color-background);
+  background-color: rgb(35, 35, 36);
+  color: var(--color-primary);
 
 }
 
@@ -41,12 +44,11 @@ body {
   color: #7FDEFF;
 }
 .boss .cardoo {
-  border: 1px solid var(--color-background);
+  border: 1px solid var(--color-primary);
   background-color: rgb(250, 243, 231);
   border-radius: 15px;
   width: 100%;
   justify-self: center;
-  height: calc(1.3*var(--card-width));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -55,12 +57,42 @@ body {
  
 }
 .boss .cardoo:hover {
-  transform: scale(1.03);
-  -webkit-box-shadow: -0px 5px 25px 0px rgba(9, 1, 50, 0.453);
-  -moz-box-shadow: -0px 5px 25px 0px rgba(9, 1, 50, 0.453);
-  box-shadow: -0px 5px 25px 0px rgba(9, 1, 50, 0.453);
+  
+  -webkit-box-shadow: -0px 5px 25px 0px rgba(0, 0, 0, 0.453);
+  -moz-box-shadow: -0px 5px 25px 0px rgba(0, 0, 0, 0.453);
+  box-shadow: -0px 5px 25px 0px rgba(0, 0, 0, 0.453);
 }
 
+
+.boss .cardoo.card-back {
+  background-color: rgb(35, 35, 36);
+
+}
+
+
+.boss .card-back .testowe {
+  background-color: rgb(48, 48, 48);
+
+}
+
+.boss footer{
+  background-color: rgb(35, 35, 36);
+}
+
+.boss .win {
+ 
+  background-color: rgb(35, 35, 36);
+ 
+ }
+ .boss #content-wrapper{
+  background-color: rgb(35, 35, 36);
+
+}
+.boss #content-wrapper.lose-screen {
+  background-color: rgb(35, 35, 36);
+
+
+}
 
 
 
@@ -74,17 +106,23 @@ body {
 
 p {
   font-size: 1.6rem;
+  font-weight: 300;
+  line-height: 1.4;
 }
 h3 {
   font-size: 6rem;
 }
 h4 {
-  font-weight: 300;
+  font-weight: 100;
 }
 .player-score {
   font-weight: 900;
 }
 
+strong {
+  color:#7FDEFF;
+  font-weight: 500;
+}
 
 
 .hidden {
@@ -107,10 +145,7 @@ h4 {
     /* width: 100vw; */
     height: 100vh;
 }
-.message {
-    max-width: 400px;
-    text-align: center;
-}
+
 
 
 #content-wrapper{
@@ -120,20 +155,24 @@ h4 {
   top: 0;
   z-index: 6;
   display: flex;
+  text-align: center;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
+  padding: 50px 0;
 }
 #content-wrapper.lose-screen {
-  background-color: var(--color-primary);
-  color: var(--color-background);
+  background-color: var(--color-background);
+  color: var(--color-primary);
   flex-direction: column;
 }
 
 
 
 .welcome-screen{
+  margin:0 2rem;
+  text-align: center;
   max-width: 400px;
   display: flex;
   flex-flow: column;
@@ -143,7 +182,7 @@ h4 {
 }
 .welcome-message {
   font-size: 3rem;
-  font-weight: 300;
+  font-weight: 100;
 }
 .logo{
   margin: 1rem 0;
@@ -185,7 +224,7 @@ h4 {
 .input{
   background: none;
   border-radius: 15px;
-  border: 2px solid #0c47678e;
+  border: 2px solid #f6e7cb98;
   height: 4rem;
   font-weight: 500;
   font-size: 1.8rem;
@@ -212,20 +251,25 @@ h4 {
 
 
 
-
-
-
-
-
-.footer{
+footer{
   background-color: #0c4767;
-  /* position: fixed; */
-  position: fixed;
+  border-top: 1px solid rgba(255, 255, 255, 0.153);
   z-index: 15;
   height: 50px;
   top: 100%;
   transform: translateY(-50px);
+  position: fixed;
+
   width: 100%;
+}
+
+
+.footer{
+  /* position: fixed; */
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
 }
 
 
@@ -273,32 +317,6 @@ h4 {
   50% {width: 0%}
   100% {width: 100%}
 }
-@keyframes exam2 {
-  0% {width:100%}
-  50% {width: 1%}
-  100% {width: 100%}
-}
-
-@keyframes fadeIn {
-  0% {opacity: 0}
-  100% {opacity: 1}
-}
-
-#transition {
-  position: absolute;
-  background-color: var(--color-primary);
-  clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
-  height: 100%;
-  width: 140%;
-  left: -140%;
-  z-index: 12;
-  
-
-}
-
-
-
-
 
 #countdown{
   position: absolute;
@@ -310,10 +328,10 @@ h4 {
   justify-content: center;
   font-size: 15rem;
   align-items: center;
-  color: var(--color-background);
+  color: var(--color-primary);
   font-weight: 900;
   text-align: center;
-  background-color: var(--color-primary);
+  background-color: var(--color-background);
   opacity: 0;
   pointer-events: none;
 }
@@ -326,10 +344,10 @@ h4 {
   justify-content: center;
   font-size: 4rem;
   align-items: center;
-  color: var(--color-background);
+  color: var(--color-primary);
   font-weight: 900;
   text-align: center;
-  background-color: var(--color-primary);
+  background-color: var(--color-background);
  
  
 }
@@ -339,7 +357,8 @@ h4 {
 }
 
 .score {
-  margin: 0.4rem 0;
+  margin: 0;
+  font-size: 1.4rem;
 }
 
 
@@ -359,7 +378,7 @@ nav {
   /* z-index: 4;
   position: fixed; */
   width: 100%;
-  height: 60px;
+  height: 50px;
   background: none;
 }
 .nav {
@@ -367,26 +386,28 @@ nav {
   width: 100%;
   margin: 0 auto;
   max-width: 1000px;
-  padding: 0 1rem;
+  padding: 0 2rem;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
   
 }
 .lives {
-  padding-top: 1rem;
-  margin-right: 2rem;
+  margin-left: 1.5rem;
+  
+}
+.lives svg{
+  transform: scale(0.85) translateY(1px);
 }
 .points {
   width: 100%;
   margin: 0 auto;
   max-width: 1000px;
-  padding: 0 1rem;
 
 }
 
 .level {
-  font-size: 2.4rem;
+  font-size: 2.2rem;
   font-weight: 900;
 }
 
@@ -395,18 +416,20 @@ nav {
   font-size: 1.6rem;
 }
 .player {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
 }
 .nav-left {
   text-align: left;
+  padding-top: 1.6rem;
+
 }
 .nav-center {
-  padding-top: 1.8rem;
   
   
   text-align: center;
 }
 .nav-right {
+
   text-align: right;
 }
 /* .logo-nav {
@@ -414,7 +437,7 @@ nav {
 } */
 
 .floating-points {
-  
+  color:#7FDEFF;
   position: absolute;
   z-index: 10;
   font-size: 2rem;
@@ -494,7 +517,7 @@ nav {
 
 
 .cardoo {
-  border: 2px solid var(--color-primary);
+  border: 1px solid var(--color-primary);
   background-color: #faf3e7;
   border-radius: 15px;
   width: 100%;
@@ -578,7 +601,7 @@ nav {
     grid-template-columns: repeat(2, min(45vw,160px));
   }
   .grid-1x4 .cardoo {
-    max-height: max(240px,30vh);
+    max-height: min(240px,36vh);
   }
   .grid-2x3 {
     grid-template-columns: repeat(2, min(45vw,160px));
@@ -617,7 +640,7 @@ nav {
     grid-template-columns: repeat(4, min(22vw,160px));
   }  
   .grid-2x3 .cardoo,
-  .grid-2x4 .cardoo 
+  .grid-2x4 .cardoo, 
   .grid-2x5 .cardoo  {
     height: min(240px,36vh);
   }
@@ -627,11 +650,12 @@ nav {
 
 
 
+
 .cardoo:hover {
   transform: scale(1.03);
-  -webkit-box-shadow: -0px 5px 25px 0px rgba(12, 71, 103, 0.21);
-  -moz-box-shadow: -0px 5px 25px 0px rgba(12, 71, 103, 0.21);
-  box-shadow: -0px 5px 25px 0px rgba(12, 71, 103, 0.21);
+  -webkit-box-shadow: -0px 5px 25px 0px rgba(2, 29, 44, 0.5);
+  -moz-box-shadow: -0px 5px 25px 0px rgba(2, 29, 44, 0.5);
+  box-shadow: -0px 5px 25px 0px rgba(2, 29, 44, 0.5);
 }
 .cardoo svg{
   width:50%;
@@ -652,7 +676,8 @@ nav {
   width: 10%;
 }
 .cardoo.card-back {
-  background-color: #0C4767;
+  background-color: #0e4462;
+  
   background-size: cover;
   /* border: 18px solid var(--color-primary); */
  

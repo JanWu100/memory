@@ -19,6 +19,7 @@ let playerLives = 2;
 let introDurationDeduction = 200;
 let timerWidth = window.innerWidth;
 let timerHeight = window.innerHeight;
+let duration;
 const levelWrapper = document.querySelector(".current-level");
 const contentWrapper = document.querySelector("#content-wrapper");
 const win = document.querySelector("#win");
@@ -106,8 +107,8 @@ function createLevel(isBoss = 0) {
     shuffle(colors);
     if (isBoss === 1){
         for (let i = 0; i < levelSize/2 ; i++){
-            deck.push({shape: shapes[i], color: "#0C4767"});
-            deck.push({shape: shapes[i], color: "#0C4767"});
+            deck.push({shape: shapes[i], color: "#EB5160"});
+            deck.push({shape: shapes[i], color: "#EB5160"});
         } 
     } else {
         for (let i = 0; i < levelSize/2 ; i++){
@@ -130,18 +131,18 @@ function shuffle(arr) {
 
 nav.innerHTML = `
    
-<div class="nav-left points">
-<p class="score">Score: <strong>${playerScore} pts</strong></p>
-<p class="score">Your highest score: <strong>${playerHighestScore} pts</strong></p>
+<div class="nav-left">
+<span class="level">Level ${level}</span>
+<span class="lives"></span>
+
+<span class="time-to-start hidden">Starting in: <span id="time-to-start">2.00<span>
+
    
 </div>
-<div class="nav-center">
-<span class="lives"></span>
-<span class="level">Level ${level}</span>
-<span class="time-to-start hidden">Starting in: <span id="time-to-start">2.00<span>
-</div>
-<div class="nav-right">
-<span class="player">Playing as: <strong id="player-name">Guest</strong></span>
+
+<div class="nav-right  points">
+<p class="score">Score: <strong>${playerScore} pts</strong></p>
+<p class="score">Your highest score: <strong>${playerHighestScore} pts</strong></p>
 </div>
 `
 displayPlayerScore()
@@ -319,7 +320,6 @@ const startLevel = (isBoss)=>{
  
     displayPlayerScore();   
 
-    circularTimer(introToLevelDuration/1000)
     fadeInOut(timerWrapper, 0,0.1, 1,50).then(()=>fadeInOut(timerWrapper, 1,-0.1, 0,50,introToLevelDuration));
     fadeInOut(levelWrapper, 0,0.1, 1,50);
 
@@ -342,8 +342,10 @@ const startLevel = (isBoss)=>{
         levelWrapper.appendChild(cardoo);
     })
    
- 
-    setTimeout(hideCards, introToLevelDuration);
+    circularTimer(introToLevelDuration/1000)
+    .then(()=>hideCards())
+    
+    // setTimeout(, introToLevelDuration);
 
 }
 
@@ -503,7 +505,7 @@ function loseGame() {
         <h1> You lose </h1>
         <p>Your score: <strong>${playerScore}</strong></p>
         <p>Your highest score: <strong>${playerHighestScore}</strong></p>
-        <button id="start" class="btn btn__inverse">Try again</button>
+        <button id="start" class="btn btn__primary">Try again</button>
         </div>
         
         
@@ -594,9 +596,6 @@ function loseGame() {
 const startButton = document.querySelector("#start")
 const circle = document.querySelector("circle");
 
-const perimeter = circle.getAttribute("r")*2*Math.PI;
-circle.setAttribute("stroke-dasharray", perimeter);
-let duration;
 
 
 
@@ -631,45 +630,54 @@ const fadeInOut = (element, startingOpacity,changeValue, boundary,interval,timeo
 
 
 
+
 function circularTimer(duration) {
-    let timer = duration;
-    timerWidth = window.innerWidth;
-    timerHeight = window.innerHeight;   
-    document.querySelector("#time-to-start").innerHTML = timer;
-    document.querySelector("#time-to-start").parentElement.classList.remove("hidden");
+    return new Promise(resolve=>{
 
-    document.querySelector("#timer-container").setAttribute("width", timerWidth);
-    document.querySelector("#timer-container").setAttribute("height", timerHeight);
+        let timer = duration;
+        timerWidth = window.innerWidth;
+        timerHeight = window.innerHeight;   
+        document.querySelector("#time-to-start").innerHTML = timer;
+        document.querySelector("#time-to-start").parentElement.classList.remove("hidden");
+    
+        document.querySelector("#timer-container").setAttribute("width", timerWidth);
+        document.querySelector("#timer-container").setAttribute("height", timerHeight);
+    
+        circle.style.opacity = 1;
+        circle.setAttribute(`r`, Math.max(timerWidth,timerHeight));
+        circle.setAttribute(`cx`, timerWidth/2);
+        circle.setAttribute(`cy`, timerHeight/2);
+        circle.setAttribute(`stroke-width`, Math.max(timerWidth*2,timerHeight*2));
+        circle.setAttribute(`transform`,`rotate(-90 ${timerWidth/2} ${timerHeight/2})`);
+        let perimeter = circle.getAttribute("r")*2*Math.PI;
+        circle.setAttribute("stroke-dasharray", perimeter);
+    
+    
+        const circularTimerInterval = setInterval(()=>{
+            if (timer <= 0){
+    
+                clearInterval(circularTimerInterval)
+                timer = duration
+                circle.setAttribute("stroke-dashoffset",0)
+                circle.style.opacity = 0;
+                document.querySelector("#time-to-start").parentElement.classList.add("hidden");
+                resolve();
+    
+                } else {
+                    timer = timer -0.01;
+                    document.querySelector("#time-to-start").innerHTML = parseFloat(timer).toFixed(1);
+            
+                    circle.setAttribute("stroke-dashoffset",
+                    perimeter * timer /duration - perimeter);
+    
+                }
+    
+            
+        }, 10)
 
-    circle.style.opacity = 1;
-    circle.setAttribute(`r`, Math.max(timerWidth,timerHeight));
-    circle.setAttribute(`cx`, timerWidth/2);
-    circle.setAttribute(`cy`, timerHeight/2);
-    circle.setAttribute(`stroke-width`, Math.max(timerWidth*2,timerHeight*2));
-    circle.setAttribute(`transform`,`rotate(-90 ${timerWidth/2} ${timerHeight/2})`);
 
+    })
 
-    const circularTimerInterval = setInterval(()=>{
-        if (timer <= 0){
-
-            clearInterval(circularTimerInterval)
-            timer = duration
-            circle.setAttribute("stroke-dashoffset",0)
-            circle.style.opacity = 0;
-            document.querySelector("#time-to-start").parentElement.classList.add("hidden");
-
-
-            } else {
-                timer = timer -0.01;
-                document.querySelector("#time-to-start").innerHTML = parseFloat(timer).toFixed(1);
-        
-                circle.setAttribute("stroke-dashoffset",
-                perimeter * timer /duration - perimeter);
-
-            }
-
-        
-    }, 10)
   
 }
 
