@@ -19,7 +19,6 @@ html {
 }
 
 
-
 /* ::selection {
   background: var(--color-primary);
   color: rgb(0, 0, 0);
@@ -269,11 +268,23 @@ footer{
   padding: 0 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  margin: 0 auto;
+  max-width: 1200px;
 
 }
 
 
-
+.about-me {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  justify-content: right;
+}
+.about-me__icon {
+  color: var(--color-primary);
+  font-size: 2.2rem;
+  margin-left: 1.5rem;
+}
 
 
 
@@ -385,24 +396,23 @@ nav {
   height: 100%;
   width: 100%;
   margin: 0 auto;
-  max-width: 1000px;
+  max-width: 1200px;
   padding: 0 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
   
 }
-.lives {
+.lifes {
   margin-left: 1.5rem;
   
 }
-.lives svg{
+.lifes svg{
   transform: scale(0.85) translateY(1px);
 }
 .points {
   width: 100%;
   margin: 0 auto;
-  max-width: 1000px;
 
 }
 
@@ -625,7 +635,7 @@ nav {
 
   }
   .grid-2x5 .cardoo {
-    height: min(240px,20vh);
+    height: min(240px,19vh);
   }
   .grid-3x4 .cardoo {
     height: min(240px,19vh);

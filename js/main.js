@@ -2,7 +2,7 @@
 let levelSize = 4;
 let playerName = "";
 const shapes = ["maze1","maze2","maze3","maze4","maze5","maze6"];
-const colors = ["#0C4767","#EB5160","#66A182","#06BCC1","blue","grey"];
+const colors = ["#0C4767","#EB5160","#66A182","#06BCC1","#4CE0B3","#F1AA63"];
 // const colorsBoss = ["#0C4767","#0C4767","#0C4767","#0C4767","#0C4767","#0C4767",]
 let deck = [];
 let cardsDrawn = 0;
@@ -15,11 +15,12 @@ let playerHighestScore = 0;
 let floatingPointsPosition = 0;
 let highscores = [];
 let basePoints = 500;
-let playerLives = 2;
-let introDurationDeduction = 200;
+let playerLifes = 2;
+let introDurationDeduction = 150;
 let timerWidth = window.innerWidth;
 let timerHeight = window.innerHeight;
 let duration;
+let levelWhenLost = 1;
 const levelWrapper = document.querySelector(".current-level");
 const contentWrapper = document.querySelector("#content-wrapper");
 const win = document.querySelector("#win");
@@ -64,19 +65,24 @@ timerWrapper.innerHTML = `
 
 
 function countdown(number){
-    const counter = document.querySelector("#countdown");
-    counter.style.opacity = 1;
-    counter.innerHTML = number;
-    const countdownInterval = setInterval(() => {
-        if (number === 1) {
-            clearInterval(countdownInterval);
-            counter.innerHTML = ``;
-            counter.style.opacity = 0;
-        } else {
-        number = number-1;
+    return new Promise(resolve =>{
+        const counter = document.querySelector("#countdown");
+        counter.style.opacity = 1;
         counter.innerHTML = number;
-        }; 
-    }, 1000);
+        const countdownInterval = setInterval(() => {
+            if (number === 1) {
+                clearInterval(countdownInterval);
+                counter.innerHTML = ``;
+                counter.style.opacity = 0;
+                resolve()
+            } else {
+            number = number-1;
+            counter.innerHTML = number;
+            }; 
+        }, 1000);
+        
+    })
+
 };
 
 function floatingPoints(amount,posX,posY,fpn=1){
@@ -133,7 +139,7 @@ nav.innerHTML = `
    
 <div class="nav-left">
 <span class="level">Level ${level}</span>
-<span class="lives"></span>
+<span class="lifes"></span>
 
 <span class="time-to-start hidden">Starting in: <span id="time-to-start">2.00<span>
 
@@ -142,7 +148,7 @@ nav.innerHTML = `
 
 <div class="nav-right  points">
 <p class="score">Score: <strong>${playerScore} pts</strong></p>
-<p class="score">Your highest score: <strong>${playerHighestScore} pts</strong></p>
+<p class="score">Highest score: <strong>${playerHighestScore} pts</strong></p>
 </div>
 `
 displayPlayerScore()
@@ -153,12 +159,12 @@ const points = document.querySelector(".points");
 
     points.innerHTML = `
     <p class="score">Score: <strong>${playerScore} pts</strong></p>
-    <p class="score">Your highest score: <strong>${playerHighestScore} pts</strong></p>
+    <p class="score">Highest score: <strong>${playerHighestScore} pts</strong></p>
     
     
     `
-    if (playerLives===2){
-        document.querySelector(".lives").innerHTML = `
+    if (playerLifes===2){
+        document.querySelector(".lifes").innerHTML = `
         <svg width="20" height="18" viewBox="0 0 20 18"  fill="#EB5160" xmlns="http://www.w3.org/2000/svg">
             <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
         </svg>
@@ -167,7 +173,7 @@ const points = document.querySelector(".points");
         </svg>
     `
     } else {
-        document.querySelector(".lives").innerHTML = `
+        document.querySelector(".lifes").innerHTML = `
         <svg width="20" height="18" viewBox="0 0 20 18"  fill="#EB5160" xmlns="http://www.w3.org/2000/svg">
             <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
         </svg>
@@ -179,9 +185,9 @@ const points = document.querySelector(".points");
     }
 }
 
-function noMoreLives() {
+function noMoreLifes() {
     return new Promise(resolve =>{
-        document.querySelector(".lives").innerHTML = `
+        document.querySelector(".lifes").innerHTML = `
         <svg stroke="#EB5160""
         stroke-width="2" width="20" height="18" viewBox="-1 -1 22 20"  fill="none" stroke-c xmlns="http://www.w3.org/2000/svg">
             <path d="M19.9997 5.23392C19.9997 2.34811 17.6519 0 14.7668 0C13.7607 0.00108949 12.7762 0.291791 11.9309 0.837378C11.0856 1.38297 10.4152 2.16037 9.99983 3.07672C9.58472 2.1604 8.91455 1.38298 8.0694 0.837384C7.22425 0.291783 6.23988 0.00107523 5.23392 0C2.3471 0 0 2.34811 0 5.23392C0.00144708 5.99347 0.167778 6.74364 0.487502 7.43262C0.807226 8.1216 1.27272 8.73295 1.85182 9.22443L9.83418 17.1536C9.88157 17.2008 9.94574 17.2273 10.0126 17.2273C10.0795 17.2273 10.1437 17.2008 10.1911 17.1536L18.4701 8.92847C18.9559 8.44383 19.3411 7.86792 19.6036 7.23388C19.8662 6.59984 20.0007 5.92016 19.9997 5.23392Z"/>
@@ -197,30 +203,6 @@ function noMoreLives() {
 
 
 
-// const trans = {
-//     position: -140, 
-//     moveX(){
-//         // document.querySelector("#transition").style.left = `${this.position}%`; 
-
-//         this.position+=4;
-//         console.log(this.position) 
-
-//     },
-//     start() {
-        
-//         setInterval(this.moveX, 1000);
-//         // if (this.position > 140 ){
-//         //     this.reset();
-//         //     console.log("more")
-//         // } else {
-//         //     console.log("less")
-//         // }
-//     },
-//     reset(){
-//         this.position = -140
-//         clearInterval(transitionInterval)
-//     }
-// }
 
 function cardClicked(event) {
 
@@ -265,13 +247,13 @@ function cardClicked(event) {
         loseGame();
             
     }
-    if (solved === levelSize/2 && level === 9){
+    if (solved === levelSize/2 && level === 4){
         bossChallenge();
-    } else if (solved === levelSize/2 && level === 19){
+    } else if (solved === levelSize/2 && level === 14){
         bossChallenge();
-    } else if (solved === levelSize/2 && level === 29){
+    } else if (solved === levelSize/2 && level === 24){
         bossChallenge();
-    } else if (solved === levelSize/2 && level === 39){
+    } else if (solved === levelSize/2 && level === 34){
         bossChallenge();
     } else if (solved === levelSize/2){
 
@@ -284,12 +266,7 @@ function cardClicked(event) {
 
 
 const startLevel = (isBoss)=>{
-    // levelSize = 4;
 
-    // levelWrapper.classList.remove("grid-1x3");
-    // levelWrapper.classList.remove("grid-1x4");
-    // levelWrapper.classList.remove("grid-1x5");
-    // levelWrapper.classList.add("grid-1x4");
 
     contentWrapper.classList.remove("lose-screen");
     contentWrapper.classList.add("hidden");
@@ -298,19 +275,19 @@ const startLevel = (isBoss)=>{
     document.querySelector(".level").innerHTML = `Level ${level}`;
     floatingPointsPosition=0;
 
-    if( level === 41) {
+    if( level === 36) {
         introToLevelDuration = startingDuration;
         levelSize = 12;
         levelWrapper.classList.replace("grid-2x5","grid-3x4")
-    } else if( level === 31) {
+    } else if( level === 26) {
         introToLevelDuration = startingDuration;
         levelSize = 10;
         levelWrapper.classList.replace("grid-2x4","grid-2x5")
-    } else if( level === 21) {
+    } else if( level === 16) {
         introToLevelDuration = startingDuration;
         levelSize = 8;
         levelWrapper.classList.replace("grid-2x3","grid-2x4")
-    } else if( level === 11) {
+    } else if( level === 6) {
         introToLevelDuration = startingDuration;
         levelSize = 6;
         levelWrapper.classList.replace("grid-1x4","grid-2x3")
@@ -345,7 +322,7 @@ const startLevel = (isBoss)=>{
     circularTimer(introToLevelDuration/1000)
     .then(()=>hideCards())
     
-    // setTimeout(, introToLevelDuration);
+  
 
 }
 
@@ -354,16 +331,14 @@ const startLevel = (isBoss)=>{
 document.querySelector("#start").addEventListener("click",()=>{
 
     if (document.querySelector("input").value){
-    document.querySelector("#player-name").innerHTML = document.querySelector("input").value;
-
+        document.querySelector("#player-name").innerHTML = document.querySelector("input").value;
     }
     contentWrapper.classList.add("hidden");
             contentWrapper.style.opacity = 0;
 
     contentWrapper.innerHTML = ``;
     
-    countdown(3)
-    setTimeout(startLevel,3000)
+    countdown(3).then(()=>startLevel())
 })
 
 function hideCards() {
@@ -379,29 +354,7 @@ function hideCards() {
     .then(()=>levelTimer.start())
    
     
-    // const myInterval = setInterval(transition, 6);
-    //     let elementPosition = -140;
-    //     function transition() {
-    //         if (elementPosition < 140){
-    //         document.querySelector("#transition").style.left = `${elementPosition}%`;
-    //         return elementPosition+=4;
 
-    //         } else {
-    //         elementPosition = -140;
-    //         clearInterval(myInterval);
-    //         }
-    //     }
-    
-    // setTimeout(()=>{
-    //     // levelTimer.start()
-
-    //     currentCards.forEach((card)=>{
-    //         card.classList.add("card-back");
-            
-    //         card.classList.remove("obrocik");
-    //         card.addEventListener("click", cardClicked);
-    //     })
-    // }, 50);
 
     
 }
@@ -496,15 +449,15 @@ function bossChallenge() {
 }
 
 function loseGame() {
-    if( playerLives === 1) {
+    if( playerLifes === 1) {
         contentWrapper.style.opacity = 0;
         contentWrapper.classList.add("lose-screen");
 
         contentWrapper.innerHTML = `
         <div class="lost">
-        <h1> You lose </h1>
-        <p>Your score: <strong>${playerScore}</strong></p>
-        <p>Your highest score: <strong>${playerHighestScore}</strong></p>
+        <h1> Game over </h1>
+        <p>Score: <strong>${playerScore}</strong></p>
+        <p>Highest score: <strong>${playerHighestScore}</strong></p>
         <button id="start" class="btn btn__primary">Try again</button>
         </div>
         
@@ -526,12 +479,11 @@ function loseGame() {
             levelWrapper.classList.remove("grid-3x4");
 
             levelWrapper.classList.add("grid-1x4");
-            countdown(3)
-            setTimeout(startLevel,3000)
+            countdown(3).then(()=>startLevel())
         })
         // fadeInOut(levelWrapper, 1,-0.1, 0,50,1500);
 
-        const lifeOne = document.querySelector(".lives").children[0]
+        const lifeOne = document.querySelector(".lifes").children[0]
         fadeInOut(lifeOne, 1,-1, 0,10)
         .then(()=>fadeInOut(lifeOne,0,1,1,10,200))
         .then(()=>fadeInOut(lifeOne,1,-1,0,10,200))
@@ -542,7 +494,7 @@ function loseGame() {
         .then(()=>fadeInOut(lifeOne,0,1,1,10,200))
         .then(()=>fadeInOut(lifeOne,1,-1,0,10,200))
         .then(()=>fadeInOut(lifeOne,0,1,1,10,200))
-        .then(()=>noMoreLives())
+        .then(()=>noMoreLifes())
         .then(()=>fadeInOut(levelWrapper, 1,-0.1, 0,50)) 
         .then(()=>fadeInOut(contentWrapper,0,.05,1,20))
         .then(()=>{contentWrapper.classList.remove("hidden")});
@@ -553,10 +505,10 @@ function loseGame() {
         currentCards.forEach((card)=>{
             card.removeEventListener("click", cardClicked);
         })    
-      
+        levelWhenLost = level;
         level = 1;
         playerScore = 0;
-        playerLives = 2;
+        playerLifes = 2;
         introToLevelDuration = startingDuration;
 
 
@@ -567,12 +519,12 @@ function loseGame() {
   
 
 
-        playerLives--;
+        playerLifes--;
         let currentCards = document.querySelectorAll(".cardoo");
         currentCards.forEach((card)=>{
             card.removeEventListener("click", cardClicked);
         })    
-        const lifeTwo = document.querySelector(".lives").children[1]
+        const lifeTwo = document.querySelector(".lifes").children[1]
         fadeInOut(lifeTwo, 1,-1, 0,10)
         .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
         .then(()=>fadeInOut(lifeTwo,1,-1,0,10,200))
@@ -650,7 +602,7 @@ function circularTimer(duration) {
         circle.setAttribute(`stroke-width`, Math.max(timerWidth*2,timerHeight*2));
         circle.setAttribute(`transform`,`rotate(-90 ${timerWidth/2} ${timerHeight/2})`);
         let perimeter = circle.getAttribute("r")*2*Math.PI;
-        circle.setAttribute("stroke-dasharray", perimeter);
+        circle.setAttribute("stroke-dasharray", `${perimeter} ${perimeter}` );
     
     
         const circularTimerInterval = setInterval(()=>{
