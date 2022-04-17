@@ -300,19 +300,19 @@ const startLevel = (isBoss)=>{
     if( level === 41) {
         introToLevelDuration = startingDuration;
         levelSize = 12;
-        levelWrapper.classList.replace("grid-1x5","grid-1x3")
+        levelWrapper.classList.replace("grid-2x5","grid-3x4")
     } else if( level === 31) {
         introToLevelDuration = startingDuration;
         levelSize = 10;
-        levelWrapper.classList.replace("grid-1x4","grid-1x5")
+        levelWrapper.classList.replace("grid-2x4","grid-2x5")
     } else if( level === 21) {
         introToLevelDuration = startingDuration;
         levelSize = 8;
-        levelWrapper.classList.replace("grid-1x3","grid-1x4")
+        levelWrapper.classList.replace("grid-2x3","grid-2x4")
     } else if( level === 11) {
         introToLevelDuration = startingDuration;
         levelSize = 6;
-        levelWrapper.classList.replace("grid-1x4","grid-1x3")
+        levelWrapper.classList.replace("grid-1x4","grid-2x3")
     }
 
     let currentLevel = createLevel(isBoss);
@@ -372,37 +372,76 @@ function hideCards() {
 
 
 
-    // turnOver().then(()=>levelTimer.start())
-    // currentCards.forEach((card)=>{
-    //     card.classList.remove("obrocik2");
-    // })
+    turnOver()
+    .then(()=>clickActive())
+    .then(()=>levelTimer.start())
+   
     
-    const myInterval = setInterval(transition, 6);
-        let elementPosition = -140;
-        function transition() {
-            if (elementPosition < 140){
-            document.querySelector("#transition").style.left = `${elementPosition}%`;
-            return elementPosition+=4;
+    // const myInterval = setInterval(transition, 6);
+    //     let elementPosition = -140;
+    //     function transition() {
+    //         if (elementPosition < 140){
+    //         document.querySelector("#transition").style.left = `${elementPosition}%`;
+    //         return elementPosition+=4;
 
-            } else {
-            elementPosition = -140;
-            clearInterval(myInterval);
-            }
-        }
+    //         } else {
+    //         elementPosition = -140;
+    //         clearInterval(myInterval);
+    //         }
+    //     }
     
-    setTimeout(()=>{
-        levelTimer.start()
+    // setTimeout(()=>{
+    //     // levelTimer.start()
 
-        currentCards.forEach((card)=>{
-            card.classList.add("card-back");
+    //     currentCards.forEach((card)=>{
+    //         card.classList.add("card-back");
             
-            card.classList.remove("obrocik");
-            card.addEventListener("click", cardClicked);
-        })
-    }, 50);
+    //         card.classList.remove("obrocik");
+    //         card.addEventListener("click", cardClicked);
+    //     })
+    // }, 50);
 
     
 }
+function clickActive() {
+    return new Promise(resolve =>{
+        let currentLevel = document.querySelectorAll(".cardoo");
+        for (let card of currentLevel){
+        card.addEventListener("click", cardClicked)
+        resolve();
+        }
+    })
+}
+
+function turnCardsOver(ms,card) {
+    return new Promise(resolve =>{
+        setTimeout(() => {
+            card.classList.add("card-back");      
+            card.classList.remove("obrocik");
+            // card.classList.add("obrocik2");
+           
+            
+            resolve()
+        }, ms);
+    })
+}
+async function turnOver() {
+    let currentLevel = document.querySelectorAll(".cardoo")
+    
+    for (let card of currentLevel){
+        if (!card.classList.contains("card-back")){
+            await  fadeInOut(card,1,-.2,0,10)
+            .then(()=>turnCardsOver(10,card))
+            .then(()=>fadeInOut(card,0,2,1,10))
+        }
+        
+    }
+
+}
+
+
+
+
 
 function winLevel() {
 
@@ -478,9 +517,12 @@ function loseGame() {
             contentWrapper.style.opacity = 0;
             contentWrapper.innerHTML = ``;
             levelSize = 4;
-            levelWrapper.classList.remove("grid-1x3");
             levelWrapper.classList.remove("grid-1x4");
-            levelWrapper.classList.remove("grid-1x5");
+            levelWrapper.classList.remove("grid-2x3");
+            levelWrapper.classList.remove("grid-2x4");
+            levelWrapper.classList.remove("grid-2x5");
+            levelWrapper.classList.remove("grid-3x4");
+
             levelWrapper.classList.add("grid-1x4");
             countdown(3)
             setTimeout(startLevel,3000)
@@ -653,22 +695,3 @@ const levelTimer = {
     }
 }
 
-function turnCardsOver(ms,card) {
-    return new Promise(resolve =>{
-        setTimeout(() => {
-            card.classList.add("card-back");      
-            card.classList.remove("obrocik");
-            card.classList.add("obrocik2");
-
-            card.addEventListener("click", cardClicked)
-            resolve()
-        }, ms);
-    })
-}
-async function turnOver() {
-    let currentLevel = document.querySelectorAll(".cardoo")
-    for (let card of currentLevel){
-         await turnCardsOver(200,card)
-    }
-
-}

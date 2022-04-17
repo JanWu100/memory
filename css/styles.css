@@ -1,7 +1,8 @@
 :root {
   --color-primary: #0c4767;
   --color-background: #F6E7CB;
-  --card-width: 150px;
+  --card-width: 160px;
+  --card-gap: 16px;
 }
 
 html {
@@ -45,7 +46,7 @@ body {
   border-radius: 15px;
   width: 100%;
   justify-self: center;
-  height: calc(1.5*var(--card-width));
+  height: calc(1.3*var(--card-width));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -95,6 +96,8 @@ h4 {
 
 .container {
     padding: 0 2rem;
+    /* transform: translateY(-50px); */
+    
 }
 .main-wrapper {
     display: flex;
@@ -114,6 +117,7 @@ h4 {
   background-color: var(--color-background);
   color: var(--color-primary);
   position: absolute;
+  top: 0;
   z-index: 6;
   display: flex;
   justify-content: center;
@@ -212,96 +216,32 @@ h4 {
 
 
 
-.cardoo.card-back {
-  background-color: #0C4767;
-  background-size: cover;
-  /* border: 18px solid var(--color-primary); */
- 
-}
 
-.testowe {
-  display: none;
-}
-.card-back .testowe {
-  display: inline;
-  width: 80%;
-  height: 88%;
-  /* background-image: url(../files/Maze_bg.svg); */
-
-  background-color: #165170;
-
-  border-radius: 8px;
-  /* border: 2px solid var(--color-background); */
-
-
-}
-
-.card-back svg{
-  display: none;
+.footer{
+  background-color: #0c4767;
+  /* position: fixed; */
+  position: fixed;
+  z-index: 15;
+  height: 50px;
+  top: 100%;
+  transform: translateY(-50px);
+  width: 100%;
 }
 
 
-.current-level {
-  position: absolute;
-  z-index: 2;
 
-  opacity: 0;
-  gap: 20px;
-}
-.grid-1x3{
-  display: grid;
-  grid-template-columns: repeat(3, var(--card-width));
-}
-.grid-1x4{
-  display: grid;
-  grid-template-columns: repeat(4, var(--card-width));
-}
-.grid-1x5{
-  display: grid;
-  grid-template-columns: repeat(5, var(--card-width));
-}
+
+
+
+
+
+
 .level-wrapper {
   opacity: 0;
 }
 
-.cardoo {
-  border: 2px solid var(--color-primary);
-  background-color: #faf3e7;
-  border-radius: 15px;
-  width: 100%;
-  justify-self: center;
-  height: calc(1.5*var(--card-width));
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transform: scale(1);
-  transition: all 100ms;
- 
-}
-.cardoo:hover {
-  transform: scale(1.03);
-  -webkit-box-shadow: -0px 5px 25px 0px rgba(12, 71, 103, 0.21);
-  -moz-box-shadow: -0px 5px 25px 0px rgba(12, 71, 103, 0.21);
-  box-shadow: -0px 5px 25px 0px rgba(12, 71, 103, 0.21);
-}
-.cardoo svg{
-  width:50%;
-}
-
-.obrocik {
-  animation-name: exam;
-  animation-duration: 0.3s;
-}
-.obrocik2 {
-  animation-name: exam2;
-  animation-duration: 0.3s;
-}
 
 
-
-.cardoo img{
-  width: 10%;
-}
 
 .win-wrapper {
  position: absolute;
@@ -363,6 +303,7 @@ h4 {
 #countdown{
   position: absolute;
   z-index: 10;
+  top: 0;
   width: 100%;
   height: 100%;
   display: flex;
@@ -406,13 +347,20 @@ h4 {
 .timer {
   position: absolute;
   pointer-events: none;
+  
+}
+#timer {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
 }
 
 nav {
-  z-index: 4;
-  position: fixed;
+  /* z-index: 4;
+  position: fixed; */
   width: 100%;
   height: 60px;
+  background: none;
 }
 .nav {
   height: 100%;
@@ -499,3 +447,236 @@ nav {
     pointer-events: all;
   }
  }
+
+
+
+
+
+
+
+.current-level {
+  position: absolute;
+    transform: translateY(-50px);
+  
+  z-index: 2;
+  opacity: 0;
+}
+
+
+/* @media screen and (max-height: 840px) {
+  :root {
+    --card-width: 120px;
+    --card-gap: 8px
+  }
+
+} */
+.grid {
+  display: grid;
+  gap: var(--card-gap);
+
+}
+
+.grid-1x4{
+  grid-template-columns: repeat(4, var(--card-width));
+}
+.grid-2x3{
+  grid-template-columns: repeat(3, var(--card-width));
+}
+.grid-2x4{
+  grid-template-columns: repeat(4, var(--card-width));
+}
+.grid-2x5{
+  grid-template-columns: repeat(5, var(--card-width));
+}
+.grid-3x4{
+  grid-template-columns: repeat(6, min(150px,15vw));
+}
+
+
+.cardoo {
+  border: 2px solid var(--color-primary);
+  background-color: #faf3e7;
+  border-radius: 15px;
+  width: 100%;
+  justify-self: center;
+  height: 240px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: scale(1);
+  transition: all 100ms;
+}
+
+.grid-3x4.grid{
+  gap:10px;
+}
+
+@media screen and (min-width:881px) and (min-height:880px){
+
+  .grid-3x4{
+    grid-template-columns: repeat(4, min(160px,18vw));
+  }
+}
+@media screen and (max-width: 880px) {
+ 
+
+  .grid-1x4{
+    
+    grid-template-columns: repeat(2, min(45vw,160px));
+  }  
+  .grid-2x3{
+    grid-template-columns: repeat(3, min(30vw,160px));
+  }
+  .grid-2x4{
+    grid-template-columns: repeat(4, min(22vw,160px));
+  }
+  .grid-2x5{
+    grid-template-columns: repeat(5, min(16vw,160px));
+
+  }
+  .grid-2x5 .cardoo {
+    height: min(200px,40vh);
+
+  }
+  .grid-3x4 {
+    grid-template-columns: repeat(4, min(22vw,160px));
+  }
+  .grid-3x4 .cardoo {
+    height: min(240px,26vh);
+
+  }
+  
+  
+  
+
+  .grid-2x3 .cardoo,
+  .grid-2x4 .cardoo{
+    height: min(240px,40vh);
+
+  }
+  .grid-2x5.grid,
+  .grid-3x4.grid{
+    gap:10px;
+  }
+
+}
+@media screen and (max-width: 700px) {
+  .grid-2x5{
+    grid-template-columns: repeat(4, min(18vw,160px));
+
+  }
+  .grid-2x5 .cardoo {
+    height: min(160px,24vh);
+
+  }
+}
+@media screen and (max-width: 500px) {
+ 
+
+  .grid-1x4{
+    
+    grid-template-columns: repeat(2, min(45vw,160px));
+  }
+  .grid-1x4 .cardoo {
+    max-height: max(240px,30vh);
+  }
+  .grid-2x3 {
+    grid-template-columns: repeat(2, min(45vw,160px));
+  }
+  .grid-2x3 .cardoo {
+    height: min(240px,25vh);
+  }
+
+  .grid-2x4{
+    grid-template-columns: repeat(3, min(28vw,160px));
+  }
+  .grid-2x4 .cardoo {
+    height: min(240px,25vh);
+  }
+  .grid-2x5 {
+    grid-template-columns: repeat(3, min(28vw,160px));
+
+  }
+  .grid-3x4 {
+    grid-template-columns: repeat(3, min(28vw,160px));
+
+  }
+  .grid-2x5 .cardoo {
+    height: min(240px,20vh);
+  }
+  .grid-3x4 .cardoo {
+    height: min(240px,19vh);
+  }
+
+
+
+}
+@media screen and (min-width: 501px) and (max-height: 640px){
+  .grid-1x4{
+    
+    grid-template-columns: repeat(4, min(22vw,160px));
+  }  
+  .grid-2x3 .cardoo,
+  .grid-2x4 .cardoo 
+  .grid-2x5 .cardoo  {
+    height: min(240px,36vh);
+  }
+}
+
+
+
+
+
+.cardoo:hover {
+  transform: scale(1.03);
+  -webkit-box-shadow: -0px 5px 25px 0px rgba(12, 71, 103, 0.21);
+  -moz-box-shadow: -0px 5px 25px 0px rgba(12, 71, 103, 0.21);
+  box-shadow: -0px 5px 25px 0px rgba(12, 71, 103, 0.21);
+}
+.cardoo svg{
+  width:50%;
+}
+
+.obrocik {
+  animation-name: exam;
+  animation-duration: 0.3s;
+}
+.obrocik2 {
+  animation-name: exam2;
+  animation-duration: 0.3s;
+}
+
+
+
+.cardoo img{
+  width: 10%;
+}
+.cardoo.card-back {
+  background-color: #0C4767;
+  background-size: cover;
+  /* border: 18px solid var(--color-primary); */
+ 
+}
+
+.testowe {
+  display: none;
+}
+.card-back .testowe {
+  display: inline;
+  width: 80%;
+  height: 88%;
+  /* background-image: url(../files/Maze_bg.svg); */
+
+  background-color: #165170;
+
+  border-radius: 8px;
+  /* border: 2px solid var(--color-background); */
+
+
+}
+
+.card-back svg{
+  display: none;
+}
+
+
