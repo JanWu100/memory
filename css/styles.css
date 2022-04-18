@@ -108,6 +108,9 @@ p {
   font-weight: 300;
   line-height: 1.4;
 }
+h1 {
+  margin: 0;
+}
 h3 {
   font-size: 6rem;
 }
@@ -143,6 +146,9 @@ strong {
     align-items: center;
     /* width: 100vw; */
     height: 100vh;
+}
+.summary-wrapper {
+  margin: 2rem 0;
 }
 
 
@@ -273,6 +279,9 @@ footer{
 
 }
 
+.player {
+  font-size: 1.4rem;
+}
 
 .about-me {
   display: flex;
@@ -386,8 +395,8 @@ footer{
 }
 
 nav {
-  /* z-index: 4;
-  position: fixed; */
+  z-index: 4;
+  position: fixed;
   width: 100%;
   height: 50px;
   background: none;
@@ -425,26 +434,16 @@ nav {
   display: block;
   font-size: 1.6rem;
 }
-.player {
-  font-size: 1.4rem;
-}
+
 .nav-left {
   text-align: left;
   padding-top: 1.6rem;
+}
 
-}
-.nav-center {
-  
-  
-  text-align: center;
-}
 .nav-right {
-
   text-align: right;
 }
-/* .logo-nav {
-  width: 150px;
-} */
+
 
 .floating-points {
   color:#7FDEFF;
@@ -489,7 +488,7 @@ nav {
 
 .current-level {
   position: absolute;
-    transform: translateY(-50px);
+  
   
   z-index: 2;
   opacity: 0;

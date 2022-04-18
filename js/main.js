@@ -12,6 +12,8 @@ let introToLevelDuration = startingDuration;
 let level = 1;
 let playerScore = 0;
 let playerHighestScore = 0;
+let levelWhenLost = 1;
+let highestLevelReached = 1;
 let floatingPointsPosition = 0;
 let highscores = [];
 let basePoints = 500;
@@ -20,7 +22,6 @@ let introDurationDeduction = 150;
 let timerWidth = window.innerWidth;
 let timerHeight = window.innerHeight;
 let duration;
-let levelWhenLost = 1;
 const levelWrapper = document.querySelector(".current-level");
 const contentWrapper = document.querySelector("#content-wrapper");
 const win = document.querySelector("#win");
@@ -452,12 +453,18 @@ function loseGame() {
     if( playerLifes === 1) {
         contentWrapper.style.opacity = 0;
         contentWrapper.classList.add("lose-screen");
-
+        levelWhenLost = level;
+        if( levelWhenLost > highestLevelReached) {
+            highestLevelReached = levelWhenLost;
+        }
         contentWrapper.innerHTML = `
         <div class="lost">
         <h1> Game over </h1>
-        <p>Score: <strong>${playerScore}</strong></p>
-        <p>Highest score: <strong>${playerHighestScore}</strong></p>
+        <div class="summary-wrapper">
+        <p class="score">Finished with score of: <strong>${playerScore} pts</strong> at level: <strong>${levelWhenLost}</strong>.</p>
+        <p class="score">Highest score: <strong>${playerHighestScore} pts</strong>.</p>
+        <p class="score">Highest level reached: <strong>${highestLevelReached}</strong>.</p>
+        </div>
         <button id="start" class="btn btn__primary">Try again</button>
         </div>
         
@@ -505,7 +512,6 @@ function loseGame() {
         currentCards.forEach((card)=>{
             card.removeEventListener("click", cardClicked);
         })    
-        levelWhenLost = level;
         level = 1;
         playerScore = 0;
         playerLifes = 2;
