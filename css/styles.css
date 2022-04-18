@@ -24,10 +24,17 @@ html {
   color: rgb(0, 0, 0);
 } */
 body {
-  overflow: hidden;
+  
+  /* overflow: hidden; */
   font-family: 'Roboto', sans-serif;
+  width: 100vw;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
 }
-
+#game {
+  width: 100%;
+  height: 100%;
+}
 .game {
     background-color: var(--color-background);
     color: var(--color-primary);
@@ -136,6 +143,8 @@ strong {
 
 .container {
     padding: 0 2rem;
+    width: 100%;
+    height: 100%;
     /* transform: translateY(-50px); */
     
 }
@@ -145,7 +154,8 @@ strong {
     justify-content: center;
     align-items: center;
     /* width: 100vw; */
-    height: 100vh;
+    height: 100%;
+    padding: 50px 0;
 }
 .summary-wrapper {
   margin: 2rem 0;
@@ -165,11 +175,10 @@ strong {
   align-items: center;
   width: 100%;
   height: 100%;
-  padding: 50px 0;
+ 
 }
 #content-wrapper.lose-screen {
-  background-color: var(--color-background);
-  color: var(--color-primary);
+
   flex-direction: column;
 }
 
@@ -390,6 +399,7 @@ footer{
 }
 #timer {
   position: absolute;
+  display: none;
   pointer-events: none;
   top: 0;
 }
@@ -448,6 +458,7 @@ nav {
 .floating-points {
   color:#7FDEFF;
   position: absolute;
+  display:none;
   z-index: 10;
   font-size: 2rem;
   font-weight: 900;
@@ -488,7 +499,6 @@ nav {
 
 .current-level {
   position: absolute;
-  
   
   z-index: 2;
   opacity: 0;
@@ -557,7 +567,7 @@ nav {
     grid-template-columns: repeat(2, min(45vw,160px));
   }  
   .grid-2x3{
-    grid-template-columns: repeat(3, min(30vw,160px));
+    grid-template-columns: repeat(3, min(29vw,160px));
   }
   .grid-2x4{
     grid-template-columns: repeat(4, min(22vw,160px));
@@ -616,14 +626,14 @@ nav {
     grid-template-columns: repeat(2, min(45vw,160px));
   }
   .grid-2x3 .cardoo {
-    height: min(240px,25vh);
+    height: min(240px,23vh);
   }
 
   .grid-2x4{
     grid-template-columns: repeat(3, min(28vw,160px));
   }
   .grid-2x4 .cardoo {
-    height: min(240px,25vh);
+    height: min(240px,23vh);
   }
   .grid-2x5 {
     grid-template-columns: repeat(3, min(28vw,160px));
@@ -638,6 +648,9 @@ nav {
   }
   .grid-3x4 .cardoo {
     height: min(240px,19vh);
+  }
+  .grid {
+    gap: 10px;
   }
 
 

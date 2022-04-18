@@ -28,6 +28,9 @@ const win = document.querySelector("#win");
 const gameColor = document.querySelector("#game")
 const nav = document.querySelector(".nav");
 const timerWrapper = document.querySelector("#timer");
+let vh = window.innerHeight * 0.01;
+document.documentElement.style.setProperty('--vh', `${vh}px`);
+
 
 
 contentWrapper.innerHTML = `
@@ -91,12 +94,21 @@ function floatingPoints(amount,posX,posY,fpn=1){
     fp.innerHTML = `${parseInt(amount)}`;
     fp.style.left = (posX)+"px";
     fp.style.top = (posY)+"px";
+    fp.style.display = "inherit";
     const float = setInterval(()=>{
         posY = posY - 1;
         fp.style.top = (posY)+"px";
     },10);
+    function hideFloatingPoints() {
+        return new Promise(resolve =>{
+        fp.style.display = "none";
+            resolve();
+
+        })
+    }
     fadeInOut(fp,0,0.05,1,20)
     .then(()=>fadeInOut(fp,1,-0.05,0,20,200))
+    .then(()=>hideFloatingPoints())
     .then(()=>{clearInterval(float);});
 };
 
@@ -227,14 +239,17 @@ function cardClicked(event) {
         cardsDrawn = 0
         floatingPointsPosition++;
         let awardPoints = (basePoints - (25*levelTimer.read()));
-        let posX = event.clientX -20;
+        let posX = event.clientX;
         let posY = event.clientY -100;
 
         if (floatingPointsPosition%2 === 0){
             floatingPoints(awardPoints,posX,posY,1);
-        } else {
+        } else if (floatingPointsPosition%3===0){
             floatingPoints(awardPoints,posX,posY,2);
+        } else {
+            floatingPoints(awardPoints,posX,posY,3);
         }
+
         playerScore = parseInt(playerScore + awardPoints);
         if (playerScore > playerHighestScore){
             playerHighestScore = playerScore
@@ -609,7 +624,8 @@ function circularTimer(duration) {
         circle.setAttribute(`transform`,`rotate(-90 ${timerWidth/2} ${timerHeight/2})`);
         let perimeter = circle.getAttribute("r")*2*Math.PI;
         circle.setAttribute("stroke-dasharray", `${perimeter} ${perimeter}` );
-    
+        timerWrapper.style.display = "inherit";
+        
     
         const circularTimerInterval = setInterval(()=>{
             if (timer <= 0){
@@ -619,6 +635,8 @@ function circularTimer(duration) {
                 circle.setAttribute("stroke-dashoffset",0)
                 circle.style.opacity = 0;
                 document.querySelector("#time-to-start").parentElement.classList.add("hidden");
+                timerWrapper.style.display = "none";
+
                 resolve();
     
                 } else {
@@ -661,3 +679,21 @@ const levelTimer = {
     }
 }
 
+const debounce = (func,delay=1000) => {
+    let timeoutID;
+    
+    return (...args)=>{
+        if(timeoutID) {
+            clearTimeout(timeoutID);
+        }
+        timeoutID = setTimeout(()=>{
+            func.apply(null, args);
+        }, delay)
+    };
+};
+
+window.addEventListener('resize', debounce(() => {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+    console.log("a")
+  },50));
