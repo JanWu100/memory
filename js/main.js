@@ -328,7 +328,7 @@ const startLevel = (isBoss)=>{
         cardoo.setAttribute("data-value",`${card.shape}`)
         
         cardoo.innerHTML = `
-            <div class="testowe">
+            <div>
             </div>
             <img src="./files/${card.shape}.svg" onload="SVGInject(this)" fill=${card.color}></img>
 
@@ -459,7 +459,7 @@ function bossChallenge() {
     introToLevelDuration = 2000;
     level++;
 
-    contentWrapper.innerHTML = `<p class="boss-text">BOSS CHALLENGE!</p>`
+    contentWrapper.innerHTML = `<p class="boss-text">BOSS<br>CHALLENGE!</p>`
     fadeInOut(levelWrapper, 1,-0.1, 0,50,1500);
     setTimeout(()=>{
         fadeInOut(contentWrapper,0,.05,1,20)
@@ -549,7 +549,6 @@ function loseGame() {
 
 
         playerLifes--;
-        level--;
         introToLevelDuration = introToLevelDuration+introDurationDeduction;
         let currentCards = document.querySelectorAll(".cardoo");
         currentCards.forEach((card)=>{
@@ -558,19 +557,31 @@ function loseGame() {
             card.removeEventListener("click", cardClicked);
         })    
         const lifeTwo = document.querySelector(".lifes").children[1]
-        fadeInOut(lifeTwo, 1,-1, 0,10)
-        .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
-        .then(()=>fadeInOut(lifeTwo,1,-1,0,10,200))
-        .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
-        .then(()=>fadeInOut(lifeTwo,1,-1,0,10,200))
-        .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
-        .then(()=>fadeInOut(lifeTwo,1,-1,0,10,200))
-        .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
-        .then(()=>winLevel())
-        // .then(()=>{
-        //     hideCards();
-        // })
-        
+        if (level === 5 || level === 15 || level === 25 || level === 35){
+            level--;
+            fadeInOut(lifeTwo, 1,-1, 0,10)
+            .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
+            .then(()=>fadeInOut(lifeTwo,1,-1,0,10,200))
+            .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
+            .then(()=>fadeInOut(lifeTwo,1,-1,0,10,200))
+            .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
+            .then(()=>fadeInOut(lifeTwo,1,-1,0,10,200))
+            .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
+            .then(()=>bossChallenge())
+        } else {
+            level--;
+            fadeInOut(lifeTwo, 1,-1, 0,10)
+            .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
+            .then(()=>fadeInOut(lifeTwo,1,-1,0,10,200))
+            .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
+            .then(()=>fadeInOut(lifeTwo,1,-1,0,10,200))
+            .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
+            .then(()=>fadeInOut(lifeTwo,1,-1,0,10,200))
+            .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
+            .then(()=>winLevel())
+        }
+ 
+   
 
 
     }
