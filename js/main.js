@@ -18,7 +18,7 @@ let floatingPointsPosition = 0;
 let highscores = [];
 let basePoints = 500;
 let playerLifes = 2;
-let introDurationDeduction = 150;
+let introDurationDeduction = 200;
 let timerWidth = window.innerWidth;
 let timerHeight = window.innerHeight;
 let duration;
@@ -38,12 +38,12 @@ if (window.innerWidth <= 414) {
 
 contentWrapper.innerHTML = `
 <section class="welcome-screen">
-    <span class="welcome-message">Welcome to</span>
+    <span class="welcome">Welcome to</span>
     <img src="./files/amaze_logo.svg" class="logo"/>
 
 
     
-        <p>
+        <p class="welcome-message">
         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Enim ducimus
         accusamus placeat nesciunt ipsa modi maxime omnis odio, laudantium
         voluptates.
@@ -459,7 +459,7 @@ function bossChallenge() {
     introToLevelDuration = 2000;
     level++;
 
-    contentWrapper.innerHTML = `<h3>BOSS CHALLENGE!</h3>`
+    contentWrapper.innerHTML = `<p class="boss-text">BOSS CHALLENGE!</p>`
     fadeInOut(levelWrapper, 1,-0.1, 0,50,1500);
     setTimeout(()=>{
         fadeInOut(contentWrapper,0,.05,1,20)
@@ -549,6 +549,8 @@ function loseGame() {
 
 
         playerLifes--;
+        level--;
+        introToLevelDuration = introToLevelDuration+introDurationDeduction;
         let currentCards = document.querySelectorAll(".cardoo");
         currentCards.forEach((card)=>{
             card.classList.remove("clickable");
@@ -564,9 +566,10 @@ function loseGame() {
         .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
         .then(()=>fadeInOut(lifeTwo,1,-1,0,10,200))
         .then(()=>fadeInOut(lifeTwo,0,1,1,10,200))
-        .then(()=>{
-            hideCards();
-        })
+        .then(()=>winLevel())
+        // .then(()=>{
+        //     hideCards();
+        // })
         
 
 
@@ -621,6 +624,7 @@ function circularTimer(duration) {
         timerWidth = window.innerWidth;
         timerHeight = window.innerHeight;   
         document.querySelector("#time-to-start").innerHTML = timer;
+        
         document.querySelector("#time-to-start").parentElement.classList.remove("hidden");
     
         document.querySelector("#timer-container").setAttribute("width", timerWidth);
@@ -671,12 +675,13 @@ function circularTimerMobile(duration) {
     return new Promise(resolve=>{
 
         let timer = duration;
+        document.querySelector("#time-to-start").innerHTML = parseFloat(timer).toFixed(1);
         
         document.querySelector("#time-to-start").parentElement.classList.remove("hidden");
         const circularTimerInterval = setInterval(()=>{
             if (timer <= 0){
                 clearInterval(circularTimerInterval)
-                timer = duration
+                timer = 0;
                 document.querySelector("#time-to-start").parentElement.classList.add("hidden");
                 resolve();
     

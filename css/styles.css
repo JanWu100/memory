@@ -197,12 +197,17 @@ strong {
   align-items: center;
 
 }
-.welcome-message {
-  font-size: 3rem;
+.welcome {
+  font-size: 2rem;
   font-weight: 100;
 }
+.welcome-message {
+  font-size: 1.6rem;
+  line-height: 1.4;
+  margin-bottom: 3rem;
+}
 .logo{
-  max-width: 90vw;
+  max-width: 80vw;
   margin: 1rem 0;
 }
 .footer-left{
@@ -250,8 +255,8 @@ strong {
   border-radius: 15px;
   border: 2px solid #f6e7cb98;
   height: 4rem;
-  font-weight: 500;
-  font-size: 1.8rem;
+  font-weight: 300;
+  font-size: 1.6rem;
   color: var(--color-primary);
   
   text-align: center;
@@ -270,6 +275,7 @@ strong {
   color: var(--color-primary);
   opacity: 0.4;
   font-size: 1.6rem;
+  font-weight: 300;
 }
 
 
@@ -462,7 +468,7 @@ nav {
 
 .nav-left {
   text-align: left;
-  padding-top: 1.6rem;
+  padding-top: 1rem;
 }
 
 .nav-right {
@@ -566,6 +572,11 @@ nav {
   gap:10px;
 }
 
+.boss-text {
+  font-weight: 900;
+  font-size: 6rem;
+}
+
 @media screen and (min-width:881px) and (min-height:880px){
 
   .grid-3x4{
@@ -590,7 +601,7 @@ nav {
 
   }
   .grid-2x5 .cardoo {
-    height: min(200px,40vh);
+    height: min(200px,36vh);
 
   }
   .grid-3x4 {
@@ -606,7 +617,7 @@ nav {
 
   .grid-2x3 .cardoo,
   .grid-2x4 .cardoo{
-    height: min(240px,40vh);
+    height: min(240px,36vh);
 
   }
   .grid-2x5.grid,
@@ -633,40 +644,41 @@ nav {
   }
   .grid-1x4{
     
-    grid-template-columns: repeat(2, min(45vw,160px));
+    grid-template-columns: repeat(2, min(40vw,160px));
   }
   .grid-1x4 .cardoo {
-    max-height: min(240px,36vh);
+    max-height: min(240px,34vh);
   }
   .grid-2x3 {
-    grid-template-columns: repeat(2, min(45vw,160px));
+    grid-template-columns: repeat(2, min(40vw,160px));
   }
   .grid-2x3 .cardoo {
-    height: min(240px,25vh);
+    height: min(240px,24vh);
   }
 
   .grid-2x4{
     grid-template-columns: repeat(3, min(28vw,160px));
   }
   .grid-2x4 .cardoo {
-    height: min(240px,25vh);
+    height: min(240px,24vh);
   }
-  .grid-2x5 {
-    grid-template-columns: repeat(3, min(28vw,160px));
-
-  }
+  .grid-2x5,
   .grid-3x4 {
-    grid-template-columns: repeat(3, min(28vw,160px));
+    grid-template-columns: repeat(3, min(27vw,160px));
 
   }
-  .grid-2x5 .cardoo {
-    height: min(240px,19vh);
+   
+  .grid-2x5 .cardoo,
+  .grid-3x4 .cardoo  {
+    height: min(240px,18vh);
   }
-  .grid-3x4 .cardoo {
-    height: min(240px,19vh);
-  }
+  
   .grid {
-    gap: 10px;
+    gap: 8px;
+  }
+  .grid-3x4.grid,
+  .grid-2x5.grid {
+    gap:6px;
   }
   .author {
     display:none;
@@ -676,7 +688,28 @@ nav {
    
   }
   .level {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
+  }
+  .nav-left {
+    padding-top: 0;
+  }
+  .lifes svg{
+    transform: scale(0.7) translateY(4px);
+  }
+  .lifes svg:last-of-type{
+    transform: scale(0.7) translateY(4px) translateX(-8px);
+  }
+  .time-to-start{
+    display: block;
+    font-size: 1.4rem;
+  }
+  .input,
+  .btn {
+    width:90%;
+  }
+  .boss-text {
+    font-weight: 900;
+    font-size: 4rem;
   }
 
 
@@ -704,6 +737,7 @@ nav {
 }
 .cardoo svg{
   width:50%;
+  height: 50%;
 }
 
 .obrocik {
@@ -717,9 +751,9 @@ nav {
 
 
 
-.cardoo img{
+/* .cardoo img{
   width: 10%;
-}
+} */
 .cardoo.card-back {
   background: rgb(12,71,103);
   background: linear-gradient(22deg, rgba(12,71,103,1) 0%, rgba(30,104,146,1) 100%);
