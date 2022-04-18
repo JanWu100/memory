@@ -31,7 +31,10 @@ const timerWrapper = document.querySelector("#timer");
 let vh = window.innerHeight * 0.01;
 document.documentElement.style.setProperty('--vh', `${vh}px`);
 
-
+let isMobile = false;
+if (window.innerWidth <= 414) {
+    isMobile = true;
+}
 
 contentWrapper.innerHTML = `
 <section class="welcome-screen">
@@ -43,11 +46,10 @@ contentWrapper.innerHTML = `
         <p>
         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Enim ducimus
         accusamus placeat nesciunt ipsa modi maxime omnis odio, laudantium
-        voluptates, reprehenderit optio aliquam ut iusto voluptate officiis in
-        ipsum ad.
+        voluptates.
         </p>
     
-    <input type="text" class="input" placeholder="Your Name">
+    <input type="text" class="input" placeholder="Your Name" maxlength="14">
     <button id="start" class="btn btn__primary">Start game</button>
 </section>
 `
@@ -161,7 +163,7 @@ nav.innerHTML = `
 
 <div class="nav-right  points">
 <p class="score">Score: <strong>${playerScore} pts</strong></p>
-<p class="score">Highest score: <strong>${playerHighestScore} pts</strong></p>
+<p class="score">Highest: <strong>${playerHighestScore} pts</strong></p>
 </div>
 `
 displayPlayerScore()
@@ -172,7 +174,7 @@ const points = document.querySelector(".points");
 
     points.innerHTML = `
     <p class="score">Score: <strong>${playerScore} pts</strong></p>
-    <p class="score">Highest score: <strong>${playerHighestScore} pts</strong></p>
+    <p class="score">Highest: <strong>${playerHighestScore} pts</strong></p>
     
     
     `
@@ -225,7 +227,7 @@ function cardClicked(event) {
     setTimeout(()=>{
         this.classList.remove("card-back");
     },200)
-    
+    this.classList.remove("clickable")
     this.removeEventListener("click", cardClicked);
     if (cardsDrawn === 1) {
         firstSelectedCard = this.dataset.value;
@@ -334,9 +336,13 @@ const startLevel = (isBoss)=>{
         `;
         levelWrapper.appendChild(cardoo);
     })
-   
-    circularTimer(introToLevelDuration/1000)
-    .then(()=>hideCards())
+   if (isMobile) {
+       circularTimerMobile(introToLevelDuration/1000)
+       .then(()=>hideCards())
+   } else {
+       circularTimer(introToLevelDuration/1000)
+       .then(()=>hideCards())
+   }
     
   
 
@@ -347,7 +353,7 @@ const startLevel = (isBoss)=>{
 document.querySelector("#start").addEventListener("click",()=>{
 
     if (document.querySelector("input").value){
-        document.querySelector("#player-name").innerHTML = document.querySelector("input").value;
+        document.querySelector("#player-name").innerHTML = document.querySelector("input").value.split(/[^a-zA-Z0-9]/).join("");
     }
     contentWrapper.classList.add("hidden");
             contentWrapper.style.opacity = 0;
@@ -378,6 +384,7 @@ function clickActive() {
     return new Promise(resolve =>{
         let currentLevel = document.querySelectorAll(".cardoo");
         for (let card of currentLevel){
+        card.classList.add("clickable");
         card.addEventListener("click", cardClicked)
         resolve();
         }
@@ -474,7 +481,7 @@ function loseGame() {
         }
         contentWrapper.innerHTML = `
         <div class="lost">
-        <h1> Game over </h1>
+        <span="game-over-text">Game over</span>
         <div class="summary-wrapper">
         <p class="score">Finished with score of: <strong>${playerScore} pts</strong> at level: <strong>${levelWhenLost}</strong>.</p>
         <p class="score">Highest score: <strong>${playerHighestScore} pts</strong>.</p>
@@ -525,6 +532,7 @@ function loseGame() {
 
         let currentCards = document.querySelectorAll(".cardoo");
         currentCards.forEach((card)=>{
+            card.classList.remove("clickable")
             card.removeEventListener("click", cardClicked);
         })    
         level = 1;
@@ -543,6 +551,8 @@ function loseGame() {
         playerLifes--;
         let currentCards = document.querySelectorAll(".cardoo");
         currentCards.forEach((card)=>{
+            card.classList.remove("clickable");
+
             card.removeEventListener("click", cardClicked);
         })    
         const lifeTwo = document.querySelector(".lifes").children[1]
@@ -657,6 +667,28 @@ function circularTimer(duration) {
   
 }
 
+function circularTimerMobile(duration) {
+    return new Promise(resolve=>{
+
+        let timer = duration;
+        
+        document.querySelector("#time-to-start").parentElement.classList.remove("hidden");
+        const circularTimerInterval = setInterval(()=>{
+            if (timer <= 0){
+                clearInterval(circularTimerInterval)
+                timer = duration
+                document.querySelector("#time-to-start").parentElement.classList.add("hidden");
+                resolve();
+    
+                } else {
+                    timer = timer -0.10;
+                    document.querySelector("#time-to-start").innerHTML = parseFloat(timer).toFixed(1);
+                }  
+            
+        }, 100)
+    }) 
+}
+
 
 const levelTimer = { 
     start() {   
@@ -695,5 +727,4 @@ const debounce = (func,delay=1000) => {
 window.addEventListener('resize', debounce(() => {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
-    console.log("a")
   },50));

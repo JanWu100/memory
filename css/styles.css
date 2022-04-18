@@ -50,7 +50,7 @@ body {
   color: #7FDEFF;
 }
 .boss .cardoo {
-  border: 1px solid var(--color-primary);
+  border: 1px solid rgb(58, 58, 58);
   background-color: rgb(250, 243, 231);
   border-radius: 15px;
   width: 100%;
@@ -60,26 +60,23 @@ body {
   align-items: center;
   transform: scale(1);
   transition: all 100ms;
- 
-}
-.boss .cardoo:hover {
-  
   -webkit-box-shadow: -0px 5px 25px 0px rgba(0, 0, 0, 0.453);
   -moz-box-shadow: -0px 5px 25px 0px rgba(0, 0, 0, 0.453);
   box-shadow: -0px 5px 25px 0px rgba(0, 0, 0, 0.453);
 }
 
 
-.boss .cardoo.card-back {
-  background-color: rgb(35, 35, 36);
 
+.boss .cardoo.card-back {
+  background: rgb(35,35,36);
+  background: linear-gradient(22deg, rgba(35,35,36,1) 0%, rgba(58,58,62,1) 100%);
 }
 
 
-.boss .card-back .testowe {
+/* .boss .card-back .testowe {
   background-color: rgb(48, 48, 48);
 
-}
+} */
 
 .boss footer{
   background-color: rgb(35, 35, 36);
@@ -102,7 +99,10 @@ body {
 
 
 
-
+.cardoo.clickable {
+  border-color: var(--color-primary);
+  transition: border-color 0.2s;
+}
 
 
 
@@ -132,7 +132,10 @@ strong {
   color:#7FDEFF;
   font-weight: 500;
 }
-
+.game-over.text {
+  font-weight: 900;
+  font-size: 6rem;
+}
 
 .hidden {
   display: none;
@@ -199,7 +202,14 @@ strong {
   font-weight: 100;
 }
 .logo{
+  max-width: 90vw;
   margin: 1rem 0;
+}
+.footer-left{
+  display: flex;
+  align-self: center;
+  align-items: center;
+  align-content: center;
 }
 
 
@@ -285,10 +295,15 @@ footer{
   grid-template-columns: 1fr 1fr;
   margin: 0 auto;
   max-width: 1200px;
+  height: 100%;
 
 }
 
 .player {
+  margin: 0;
+  font-size: 1.4rem;
+}
+.author {
   font-size: 1.4rem;
 }
 
@@ -423,7 +438,7 @@ nav {
   
 }
 .lifes {
-  margin-left: 1.5rem;
+  margin-left: .6rem;
   
 }
 .lifes svg{
@@ -484,12 +499,7 @@ nav {
   opacity: 0;
   pointer-events: none;
 }
-@media screen and (max-width: 600px) {
-  #mobile {
-    opacity: 1;
-    pointer-events: all;
-  }
- }
+
 
 
 
@@ -536,7 +546,7 @@ nav {
 
 
 .cardoo {
-  border: 1px solid var(--color-primary);
+  border: 1px solid #175c81;
   background-color: #faf3e7;
   border-radius: 15px;
   width: 100%;
@@ -547,6 +557,9 @@ nav {
   align-items: center;
   transform: scale(1);
   transition: all 100ms;
+  -webkit-box-shadow: -0px 5px 25px 0px rgba(2, 29, 44, 0.5);
+  -moz-box-shadow: -0px 5px 25px 0px rgba(2, 29, 44, 0.5);
+  box-shadow: -0px 5px 25px 0px rgba(2, 29, 44, 0.5);
 }
 
 .grid-3x4.grid{
@@ -612,9 +625,12 @@ nav {
 
   }
 }
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 414px) {
  
-
+  .nav-left {
+    
+    padding-top: .6rem;
+  }
   .grid-1x4{
     
     grid-template-columns: repeat(2, min(45vw,160px));
@@ -626,14 +642,14 @@ nav {
     grid-template-columns: repeat(2, min(45vw,160px));
   }
   .grid-2x3 .cardoo {
-    height: min(240px,23vh);
+    height: min(240px,25vh);
   }
 
   .grid-2x4{
     grid-template-columns: repeat(3, min(28vw,160px));
   }
   .grid-2x4 .cardoo {
-    height: min(240px,23vh);
+    height: min(240px,25vh);
   }
   .grid-2x5 {
     grid-template-columns: repeat(3, min(28vw,160px));
@@ -652,7 +668,16 @@ nav {
   .grid {
     gap: 10px;
   }
-
+  .author {
+    display:none;
+  }
+  .cardoo:hover {
+    transform: scale(1);
+   
+  }
+  .level {
+    font-size: 1.8rem;
+  }
 
 
 }
@@ -675,9 +700,7 @@ nav {
 
 .cardoo:hover {
   transform: scale(1.03);
-  -webkit-box-shadow: -0px 5px 25px 0px rgba(2, 29, 44, 0.5);
-  -moz-box-shadow: -0px 5px 25px 0px rgba(2, 29, 44, 0.5);
-  box-shadow: -0px 5px 25px 0px rgba(2, 29, 44, 0.5);
+ 
 }
 .cardoo svg{
   width:50%;
@@ -698,29 +721,24 @@ nav {
   width: 10%;
 }
 .cardoo.card-back {
-  background-color: #0e4462;
-  
-  background-size: cover;
-  /* border: 18px solid var(--color-primary); */
- 
+  background: rgb(12,71,103);
+  background: linear-gradient(22deg, rgba(12,71,103,1) 0%, rgba(30,104,146,1) 100%);
 }
 
-.testowe {
+/* .testowe {
   display: none;
 }
 .card-back .testowe {
   display: inline;
   width: 80%;
   height: 88%;
-  /* background-image: url(../files/Maze_bg.svg); */
 
   background-color: #165170;
 
   border-radius: 8px;
-  /* border: 2px solid var(--color-background); */
 
 
-}
+} */
 
 .card-back svg{
   display: none;
