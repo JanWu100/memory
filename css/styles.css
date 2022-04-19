@@ -261,13 +261,13 @@ footer{
   top: 100%;
   transform: translateY(-50px);
   position: fixed;
+  padding: 0 2rem;
 
   width: 100%;
 }
 
 
 .footer{
-  padding: 0 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin: 0 auto;
@@ -391,7 +391,11 @@ footer{
   font-size: 1.4rem;
 }
 
-
+.name-reminder {
+  font-weight: 500;
+  margin-top: 1rem;
+  
+}
 
 .timer {
   position: absolute;
@@ -704,8 +708,14 @@ nav {
   .lifes svg{
     transform: scale(0.7) translateY(4px);
   }
-  .lifes svg:last-of-type{
+  /* .lifes svg:last-of-type{
     transform: scale(0.7) translateY(4px) translateX(-8px);
+  } */
+  .lifes svg:nth-of-type(2){
+    transform: scale(0.7) translateY(4px) translateX(-8px);
+  }
+  .lifes svg:nth-of-type(3){
+    transform: scale(0.7) translateY(4px) translateX(-16px);
   }
   .time-to-start{
     display: block;
@@ -719,6 +729,12 @@ nav {
     font-weight: 900;
     font-size: 4rem;
   }
+  .about-me__icon {
+    color: var(--color-primary);
+    font-size: 3rem;
+    margin-left: 2rem;
+  }
+  
 
 
 }
