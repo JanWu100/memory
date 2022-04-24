@@ -65,10 +65,7 @@ body {
   width: 100%;
   justify-self: center;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  transform: scale(1);
-  transition: all 100ms;
+ 
   -webkit-box-shadow: -0px 5px 25px 0px rgba(0, 0, 0, 0.453);
   -moz-box-shadow: -0px 5px 25px 0px rgba(0, 0, 0, 0.453);
   box-shadow: -0px 5px 25px 0px rgba(0, 0, 0, 0.453);
@@ -222,6 +219,7 @@ strong {
   color: var(--color-primary);
 }
 
+
 .input{
   background: none;
   border-radius: 15px;
@@ -230,6 +228,7 @@ strong {
   font-weight: 300;
   font-size: 1.6rem;
   color: var(--color-primary);
+  margin: 0.3rem 0;
   
   text-align: center;
   width: 60%;
@@ -514,10 +513,7 @@ nav {
 } */
 
 
-.cardoo:hover {
-  transform: scale(1.03);
- 
-}
+
 .cardoo svg{
   width:50%;
   height: 50%;
@@ -574,7 +570,6 @@ nav {
   justify-content: center;
   align-items: center;
   transform: scale(1);
-  transition: all 100ms;
   -webkit-box-shadow: -0px 5px 25px 0px rgba(2, 29, 44, 0.5);
   -moz-box-shadow: -0px 5px 25px 0px rgba(2, 29, 44, 0.5);
   box-shadow: -0px 5px 25px 0px rgba(2, 29, 44, 0.5);
@@ -695,10 +690,7 @@ nav {
   .author {
     display:none;
   }
-  .cardoo:hover {
-    transform: scale(1);
-   
-  }
+ 
   .level {
     font-size: 1.6rem;
   }
@@ -747,4 +739,11 @@ nav {
     height: min(240px,60vh);
   }
 
+}
+@media screen and (min-width: 415px) {
+  .cardoo:hover {
+    transform: scale(1.04);
+    transition: transform 0.3s;
+   
+  }
 }
