@@ -383,7 +383,7 @@ function loseGame() {
         introToLevelDuration = introToLevelDuration+introDurationDeduction;
         makeCardsNotClickable();
            
-        if (level === 5 || level === 15 || level === 25 || level === 35){
+        if (level === bossLevels[0] || level === bossLevels[1] || level === bossLevels[2] || level === bossLevels[3]){
             level--;
             loseLife(playerLifes, 4).then(()=> bossChallenge())
         } else {
