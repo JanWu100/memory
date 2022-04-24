@@ -92,6 +92,8 @@ body {
 .cardoo.clickable {
   border-color: var(--color-primary);
   transition: border-color 0.2s;
+  pointer-events: inherit;
+
 }
 
 p {
@@ -570,6 +572,7 @@ nav {
   justify-content: center;
   align-items: center;
   transform: scale(1);
+  pointer-events: none;
   -webkit-box-shadow: -0px 5px 25px 0px rgba(2, 29, 44, 0.5);
   -moz-box-shadow: -0px 5px 25px 0px rgba(2, 29, 44, 0.5);
   box-shadow: -0px 5px 25px 0px rgba(2, 29, 44, 0.5);
