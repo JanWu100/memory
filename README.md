@@ -1,4 +1,4 @@
-
+# Amaze
 Original idea for a fast-paced game based on Memory. Difficulty gradually increases. Live at:
 https://www.veryfirstwebsite.com/amaze/
 
