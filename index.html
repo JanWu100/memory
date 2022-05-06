@@ -11,7 +11,7 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
   />
     <title>Amaze</title>
-    <script src="js/svg-inject.min.js"></script>
+    <script src="js/utils/svg-inject.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500;900&display=swap" rel="stylesheet">
@@ -23,13 +23,33 @@
   <body>
     <div id="game" class="game">
       <nav id="navbar" class="hidden">
-        <div class="nav"></div>
+        <div class="nav">
+          <div class="nav-left">
+            <span class="level"></span>
+            <span class="lifes"></span>
+            <span class="starting-in hidden">Starting in: <span id="time-to-start">2.00<span>
+        </div>
+        <div class="nav-right  points">
+            <p class="score"></p>
+            <p class="score highest-score"></p>
+        </div>
+        </div>
       </nav>
 
       <div class="container">
           
           <div class="main-wrapper">
-            <div id="content-wrapper"></div>
+            <div id="content-wrapper">
+              <section class="welcome-screen">
+                <span class="welcome">Welcome to</span>
+                <img src="./files/amaze_logo.svg" class="logo"/>
+                    <p class="welcome-message">
+                    You will get <strong>additional life</strong> if you type in your name.
+                    </p>
+                    <input type="text" class="input" placeholder="Your Name" maxlength="14">
+                <button id="start" class="btn btn__primary">Play as guest</button>
+            </section>
+            </div>
             <div id="countdown"></div>
 
             <div class="welcome-screen">
@@ -64,9 +84,19 @@
         </div>
       </footer>
     </div>
+
+    <script src="js/utils/debounce.js"></script>
+    <script src="js/utils/window-height-calc.js"></script>
+    <script src="js/utils/lifes-handler.js"></script>
+
+    <script src="js/utils/floating-points-handler.js"></script>
+    <script src="js/utils/set-grid.js"></script>
+    <script src="js/utils/fade-in-out.js"></script>
+
     <script src="js/utils.js"></script>
-    
     <script src="js/main.js"></script>
+    <script src="js/circular-timer.js"></script>
+
 
   </body>
 </html>

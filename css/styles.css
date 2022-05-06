@@ -446,7 +446,7 @@ nav {
   font-weight: 900;
 }
 
-.time-to-start{
+.starting-in{
   display: block;
   font-size: 1.6rem;
 }
@@ -521,7 +521,7 @@ nav {
   height: 50%;
 }
 
-.obrocik {
+.flip {
   animation-name: flip;
   animation-duration: 0.3s;
 }
@@ -712,7 +712,7 @@ nav {
   .lifes svg:nth-of-type(3){
     transform: scale(0.7) translateY(4px) translateX(-16px);
   }
-  .time-to-start{
+  .starting-in{
     display: block;
     font-size: 1.4rem;
   }
