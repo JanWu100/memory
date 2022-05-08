@@ -14,4 +14,3 @@ const fadeInOut = (element, startingOpacity,changeValue, endingOpacity,interval,
         },timeout)
     });
 };
-

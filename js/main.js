@@ -4,8 +4,6 @@ const startingDuration = 2000;
 const introDurationDeduction = 200;
 const basePoints = 500;
 
-
-/////////////////////////////////////
 let levelSize = startingLevelsize;
 let cardsDrawn = 0;
 let solved = 0;
@@ -16,14 +14,9 @@ let floatingPointsPosition = 0;
 
 const levelWrapper = document.querySelector(".current-level");
 const contentWrapper = document.querySelector("#content-wrapper");
-const gameColor = document.querySelector("#game")
 const timerWrapper = document.querySelector("#timer");
 const playerNameInput = document.querySelector("#name-input")
 const startButton = document.querySelector("#start")
-
-window.innerWidth <= 414 ? isMobile = true : isMobile = false
-
-
 
 const player = new Player();
 
@@ -43,7 +36,6 @@ async function startGame() {
     }
     
     inverseColors();
-    
     player.reset()
     contentWrapper.style.opacity = 0;
     contentWrapper.innerHTML = ``;
@@ -77,23 +69,14 @@ const startLevel = async ()=>{
         resetIntroDuration()
         break;
     }
-
     setGrid()
     displayPlayerScore();   
     await fadeInOut(timerWrapper, 0,0.2, 1,30)
     fadeInOut(levelWrapper, 0,0.1, 1,50);
- 
     generateCards()
-
-    if (isMobile) {
-       await circularTimerMobile(introToLevelDuration/1000)
-       timerWrapper.style.opacity = 0;
-       hideCards()
-    } else {
-       await circularTimer(introToLevelDuration/1000)
-       timerWrapper.style.opacity = 0;
-       hideCards()
-    }
+    await circularTimer(introToLevelDuration/1000)
+    timerWrapper.style.opacity = 0;
+    hideCards()
 }
 
 const generateCards = () => {
@@ -279,8 +262,8 @@ async function winLevel() {
 async function makeCardsNotClickable() {
         let currentCards = document.querySelectorAll(".cardoo");
         currentCards.forEach((card)=>{
-        card.classList.remove("clickable")
-        card.removeEventListener("click", cardClicked);
+            card.classList.remove("clickable")
+            card.removeEventListener("click", cardClicked);
         }) 
 }
 

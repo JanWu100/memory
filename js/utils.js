@@ -40,17 +40,9 @@ const levelTimer = {
     }
 }
 
-// async function inverseColors(result=0) {
-    
-//         if (result === 0){
-//             gameColor.classList.replace("game","boss");
-//         } else {
-//             gameColor.classList.replace("boss","game");
-//         }
-     
-// }
 
 async function inverseColors() {
+    const gameColor = document.querySelector("#game")
     bossLevels.includes(level) ? gameColor.className = "boss" : gameColor.className = "game"; 
 }
 
