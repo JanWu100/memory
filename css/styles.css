@@ -243,6 +243,7 @@ strong {
 .input:focus {
   outline: none;
   border-color: var(--color-primary);
+  background: none;
 }
 .input::placeholder {
   color: var(--color-primary);
@@ -251,8 +252,10 @@ strong {
   font-weight: 300;
 }
 
-
-
+.input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-background) inset !important;
+  -webkit-text-fill-color: var(--color-primary) !important;
+}
 
 footer{
   background-color: #0c4767;

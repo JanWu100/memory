@@ -16,9 +16,10 @@ let floatingPointsPosition = 0;
 
 const levelWrapper = document.querySelector(".current-level");
 const contentWrapper = document.querySelector("#content-wrapper");
-// const win = document.querySelector("#win");
 const gameColor = document.querySelector("#game")
 const timerWrapper = document.querySelector("#timer");
+const playerNameInput = document.querySelector("#name-input")
+const startButton = document.querySelector("#start")
 
 window.innerWidth <= 414 ? isMobile = true : isMobile = false
 
@@ -26,13 +27,14 @@ window.innerWidth <= 414 ? isMobile = true : isMobile = false
 
 const player = new Player();
 
-if (localStorage.getItem("name")) {
+if (localStorage.getItem("playerData")) {
     logUser()
 }
 
-document.querySelector("#start").addEventListener("click",startGame)
+startButton.addEventListener("click",startGame)
+playerNameInput.addEventListener("input", debounce(changeStartButtonText,200))
 
-function startGame() {
+async function startGame() {
     level = 1;
     introToLevelDuration = startingDuration;
     levelSize = startingLevelsize;
@@ -43,15 +45,15 @@ function startGame() {
         inverseColors(1);
     }
     player.reset()
-    contentWrapper.classList.add("hidden");
     contentWrapper.style.opacity = 0;
     contentWrapper.innerHTML = ``;
 
     setGrid();
-    countdown(3).then(()=>startLevel())
+    await countdown(3)
+    startLevel()
 }
 
-const startLevel = (isBoss)=>{
+const startLevel = async (isBoss)=>{
     contentWrapper.classList.remove("lose-screen");
     contentWrapper.classList.add("hidden");
 
@@ -78,34 +80,36 @@ const startLevel = (isBoss)=>{
         break;
     }
     setGrid()
-
-    let currentLevel = createLevel(isBoss);
     displayPlayerScore();   
-
-    fadeInOut(timerWrapper, 0,0.1, 1,50).then(()=>fadeInOut(timerWrapper, 1,-0.1, 0,50,introToLevelDuration));
+    await fadeInOut(timerWrapper, 0,0.2, 1,30)
     fadeInOut(levelWrapper, 0,0.1, 1,50);
  
+    generateCards(isBoss)
+
+    if (isMobile) {
+       await circularTimerMobile(introToLevelDuration/1000)
+       timerWrapper.style.opacity = 0;
+       hideCards()
+    } else {
+       await circularTimer(introToLevelDuration/1000)
+       timerWrapper.style.opacity = 0;
+       hideCards()
+    }
+}
+
+const generateCards = (isBoss) => {
     levelWrapper.innerHTML = "";
+    let currentLevel = createLevel(isBoss);
     currentLevel.forEach(card =>{
         const cardoo = document.createElement("div");
         cardoo.classList.add("cardoo");
-
         cardoo.setAttribute("data-value",`${card.shape}`)
-        
         cardoo.innerHTML = `
-            <div>
-            </div>
+            <div></div>
             <img src="./files/${card.shape}.svg" onload="SVGInject(this)" fill=${card.color}></img>    
         `;
         levelWrapper.appendChild(cardoo);
     })
-    if (isMobile) {
-       circularTimerMobile(introToLevelDuration/1000)
-       .then(()=>hideCards())
-    } else {
-       circularTimer(introToLevelDuration/1000)
-       .then(()=>hideCards())
-    }
 }
 
 const resetIntroDuration = () => {
@@ -158,7 +162,6 @@ function cardClicked(event) {
     this.classList.remove("clickable")
     this.removeEventListener("click", cardClicked);
 
-    
     if (cardsDrawn === 1) {
         firstSelectedCard = this.dataset.value;
     }
@@ -187,10 +190,8 @@ function cardClicked(event) {
         }
        
         player.score = parseInt(player.score + awardPoints);
-
         player.checkForHighestScore()
         displayPlayerScore();
-
     }
     if (cardsDrawn > 1 && firstSelectedCard !== secondSelectedCard) {
         loseGame();        
@@ -269,7 +270,7 @@ const restartLevel = async () => {
     }
 }
 
-function bossChallenge() {
+async function bossChallenge() {
     levelTimer.stop();
     displayPlayerScore();
     
@@ -277,31 +278,28 @@ function bossChallenge() {
     level++;
 
     contentWrapper.innerHTML = `<p class="boss-text">BOSS<br>CHALLENGE!</p>`
-    fadeInOut(levelWrapper, 1,-0.1, 0,50,1500);
-    setTimeout(()=>{
-        fadeInOut(contentWrapper,0,.05,1,20)
-        .then(()=>{inverseColors()})
-        .then(()=> fadeInOut(contentWrapper,1,-.05,0,20,2000))
-        .then(()=> startLevel(1))
-    },1500)
+    await fadeInOut(levelWrapper, 1,-0.1, 0,50,1500);
+    await fadeInOut(contentWrapper,0,.05,1,20)
+    await inverseColors()
+    await fadeInOut(contentWrapper,1,-.05,0,20,2000)
+    startLevel(1)
 }
 
-function winLevel() {
+async function winLevel() {
     levelTimer.stop();
     displayPlayerScore();
-    if (introToLevelDuration > 1000) {
+    if (introToLevelDuration >= 1000) {
         introToLevelDuration = introToLevelDuration-introDurationDeduction;
     }
     level++;
-
     contentWrapper.innerHTML = `<h3>Level ${level}</h3>`
-    fadeInOut(levelWrapper, 1,-0.1, 0,50,1500);
-    setTimeout(()=>{
-        fadeInOut(contentWrapper,0,.05,1,20)
-        .then(()=>{inverseColors(1)})
-        .then(()=> fadeInOut(contentWrapper,1,-.05,0,20,300))
-        .then(()=> startLevel())
-    },1500)
+
+    await fadeInOut(levelWrapper, 1,-0.1, 0,50,1500);
+    await fadeInOut(contentWrapper,0,.05,1,20)
+    await inverseColors(1)
+    await fadeInOut(contentWrapper,1,-.05,0,20,300)
+    startLevel()
+    
 }
 
 async function makeCardsNotClickable() {
@@ -337,7 +335,6 @@ async function turnCardOver(ms,card) {
             card.classList.add("card-back");      
             card.classList.remove("flip");         
         }, ms);
-    
 }
 
 async function makeCardsClickable() {

@@ -40,13 +40,19 @@ const levelTimer = {
     }
 }
 
-function inverseColors(result=0) {
-    return new Promise(resolve =>{
+async function inverseColors(result=0) {
+    
         if (result === 0){
             gameColor.classList.replace("game","boss");
         } else {
             gameColor.classList.replace("boss","game");
         }
-        resolve();
-    })
+     
 }
+
+const changeStartButtonText = () => {
+    if(!player.isRegistered){
+        playerNameInput.value ? startButton.innerHTML = "Play" : startButton.innerHTML = "Play as guest"
+    } 
+}
+
