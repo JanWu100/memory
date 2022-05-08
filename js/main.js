@@ -1,78 +1,52 @@
 const startingLevelsize = 4;
-const bossLevels = [5,10,15,20]
-const startingDuration = 3000;
+const bossLevels = [3,6,10,15]
+const startingDuration = 2000;
 const introDurationDeduction = 200;
 const basePoints = 500;
-const shapes = ["maze1","maze2","maze3","maze4","maze5","maze6"];
-const colors = ["#0C4767","#EB5160","#66A182","#06BCC1","#4CE0B3","#F1AA63"];
 
 
+/////////////////////////////////////
 let levelSize = startingLevelsize;
-let playerName = "Guest";
-
-let deck = [];
 let cardsDrawn = 0;
 let solved = 0;
 let introToLevelDuration = startingDuration;
 let level = 1;
-let playerScore = 0;
-let playerHighestScore = 0;
 let levelWhenLost = 1;
-let highestLevelReached = 1;
 let floatingPointsPosition = 0;
-let highscores = [];
-let playerLifes = 2;
-let timerWidth = window.innerWidth;
-let timerHeight = window.innerHeight;
-let duration;
-let isRegistered = false;
-
-const ranking = [];
-
 
 const levelWrapper = document.querySelector(".current-level");
 const contentWrapper = document.querySelector("#content-wrapper");
-const win = document.querySelector("#win");
+// const win = document.querySelector("#win");
 const gameColor = document.querySelector("#game")
 const timerWrapper = document.querySelector("#timer");
 
 window.innerWidth <= 414 ? isMobile = true : isMobile = false
 
-document.querySelector(".level").innerHTML = `Level ${level}`
-document.querySelector(".score").innerHTML = `Score: <strong>${playerScore} pts</strong>`
-document.querySelector(".highest-score").innerHTML = `Highest: <strong>${playerHighestScore} pts`
 
+
+const player = new Player();
+
+if (localStorage.getItem("name")) {
+    logUser()
+}
 
 document.querySelector("#start").addEventListener("click",startGame)
 
-
-displayPlayerScore()
-
-function displayPlayerScore() {
-    displayLifes() 
-    const points = document.querySelector(".points");
-
-    points.innerHTML = `
-        <p class="score">Score: <strong>${playerScore} pts</strong></p>
-        <p class="score">Highest: <strong>${playerHighestScore} pts</strong></p>
-        `
-}
-
-
 function startGame() {
+    level = 1;
+    introToLevelDuration = startingDuration;
+    levelSize = startingLevelsize;
     if (document.querySelector(".input").value){
-        isRegistered = true;
-        resetLifes();
-        document.querySelector("#player-name").innerHTML = document.querySelector(".input").value.split(/[^a-zA-Z0-9]/).join("");
+        player.register()      
     }
     if (gameColor.classList.contains("boss")){
         inverseColors(1);
     }
+    player.reset()
     contentWrapper.classList.add("hidden");
     contentWrapper.style.opacity = 0;
     contentWrapper.innerHTML = ``;
 
-    levelSize = startingLevelsize;
     setGrid();
     countdown(3).then(()=>startLevel())
 }
@@ -138,8 +112,18 @@ const resetIntroDuration = () => {
     introToLevelDuration = startingDuration;
 }
 
+function displayPlayerScore() {
+    const points = document.querySelector(".points");
+    points.innerHTML = `
+        <p class="score">Score: <strong>${player.score} pts</strong></p>
+        <p class="score">Highest: <strong>${player.highestScore} pts</strong></p>
+        `
+}
+
 function createLevel(isBoss = 0) {
-    deck = [];
+    let deck = [];
+    const shapes = ["maze1","maze2","maze3","maze4","maze5","maze6"];
+    const colors = ["#0C4767","#EB5160","#66A182","#06BCC1","#4CE0B3","#F1AA63"];
     shuffle(shapes);
     shuffle(colors);
     if (isBoss === 1){
@@ -167,7 +151,6 @@ function shuffle(arr) {
 function cardClicked(event) {
     
     this.classList.add("flip");
-    // cardTurnSound.play();
     cardsDrawn++;
     setTimeout(()=>{
         this.classList.remove("card-back");
@@ -191,11 +174,11 @@ function cardClicked(event) {
         let posX = event.clientX;
         let posY = event.clientY -100;
 
-        switch (true) {
-            case (floatingPointsPosition%2 === 0):
+        switch (0) {
+            case (floatingPointsPosition%2):
                 floatingPoints(awardPoints,posX,posY,1);
             break;
-            case (floatingPointsPosition%3 === 0):
+            case (floatingPointsPosition%3):
                 floatingPoints(awardPoints,posX,posY,2);
             break;
             default:
@@ -203,11 +186,9 @@ function cardClicked(event) {
             break;
         }
        
-        playerScore = parseInt(playerScore + awardPoints);
+        player.score = parseInt(player.score + awardPoints);
 
-        if (playerScore > playerHighestScore){
-            playerHighestScore = playerScore
-        }
+        player.checkForHighestScore()
         displayPlayerScore();
 
     }
@@ -225,70 +206,66 @@ function cardClicked(event) {
     }
 };
 
-function loseGame() {
-    if( playerLifes === 1) {
-        ranking.push({id: ranking.length+1, name: playerName, score: playerScore, level: level});
-
-        contentWrapper.style.opacity = 0;
-        contentWrapper.classList.add("lose-screen");
+async function loseGame() {
+    if( player.lifes === 1) {
         levelWhenLost = level;
-        if( levelWhenLost > highestLevelReached) {
-            highestLevelReached = levelWhenLost;
-        }
-        if (!isRegistered) {
-
-            const html = ` 
-            <div class="lost">
-                <span="game-over-text">Game over</span>
-                <div class="summary-wrapper">
-                <p class="score">Finished with score of: <strong>${playerScore} pts</strong> at level: <strong>${levelWhenLost}</strong>.</p>
-                <p class="score">Highest score: <strong>${playerHighestScore} pts</strong>.</p>
-                <p class="score">Highest level reached: <strong>${highestLevelReached}</strong>.</p>
-                </div>`
-
-            contentWrapper.innerHTML = `
-            ${html}
-                <input type="text" class="input" placeholder="Your Name" maxlength="14">
-                <button id="restart" class="btn btn__primary">Try again</button>
-                <p class="score name-reminder">Maybe type your name after all.</p>
-            </div>
-            `
-        } else {
-            contentWrapper.innerHTML = `
-            ${html}
-                <input hidden type="text" class="input" placeholder="Your Name" maxlength="14">
-                <button id="restart" class="btn btn__primary">Try again</button>
-            </div>
-            `
-        }
- 
-        document.querySelector("#restart").addEventListener("click",startGame)
-     
-        loseLife(playerLifes,6)
-        .then(()=>displayLifes())
-        .then(()=>fadeInOut(levelWrapper, 1,-0.1, 0,50)) 
-        .then(()=>fadeInOut(contentWrapper,0,.05,1,20))
-        .then(()=>{
-            contentWrapper.classList.remove("hidden")
-            resetLifes();
-        });
-
+        player.checkForHighestScore();
+        player.export()
+        generateLoseScreen()
         makeCardsNotClickable(); 
-        level = 1;
-        playerScore = 0;
-        introToLevelDuration = startingDuration;
-
+    
+        await player.loseLife()
+        await fadeInOut(levelWrapper, 1,-0.1, 0,50)
+        await fadeInOut(contentWrapper,0,.05,1,20)  
+        contentWrapper.classList.remove("hidden")
+        player.reset()
     } else {
-        introToLevelDuration = introToLevelDuration+introDurationDeduction;
-        makeCardsNotClickable();
-           
-        if (level === bossLevels[0] || level === bossLevels[1] || level === bossLevels[2] || level === bossLevels[3]){
-            level--;
-            loseLife(playerLifes, 4).then(()=> bossChallenge())
-        } else {
-            level--;
-            loseLife(playerLifes, 4).then(()=> winLevel())
-        }
+        restartLevel()
+    }
+}
+
+const generateLoseScreen = () => {
+    contentWrapper.style.opacity = 0;
+    contentWrapper.classList.add("lose-screen");
+    const html = ` 
+    <div class="lost">
+        <span="game-over-text">Game over</span>
+        <div class="summary-wrapper">
+        <p class="score">Finished with score of: <strong>${player.score} pts</strong> at level: <strong>${levelWhenLost}</strong>.</p>
+        <p class="score">Highest score: <strong>${player.highestScore} pts</strong>.</p>
+        <p class="score">Highest level reached: <strong>${player.highestLevelReached}</strong>.</p>
+        </div>`
+    if (!player.isRegistered) {
+        contentWrapper.innerHTML = `
+        ${html}
+            <input type="text" class="input" placeholder="Your Name" maxlength="14">
+            <button id="restart" class="btn btn__primary">Try again</button>
+            <p class="score name-reminder">Maybe type your name after all.</p>
+        </div>
+        `
+    } else {
+        contentWrapper.innerHTML = `
+        ${html}
+            <input hidden type="text" class="input" placeholder="Your Name" maxlength="14">
+            <button id="restart" class="btn btn__primary">Try again</button>
+        </div>
+        `
+    }
+    document.querySelector("#restart").addEventListener("click",startGame)
+}
+
+const restartLevel = async () => {
+    introToLevelDuration = introToLevelDuration+introDurationDeduction;
+    makeCardsNotClickable();
+       
+    if (level === bossLevels[0] || level === bossLevels[1] || level === bossLevels[2] || level === bossLevels[3]){
+        level--;
+        await player.loseLife()
+        bossChallenge()
+    } else {
+        level--;
+        await player.loseLife()
+        winLevel()
     }
 }
 
@@ -327,24 +304,21 @@ function winLevel() {
     },1500)
 }
 
-function makeCardsNotClickable() {
-    return new Promise(resolve => {
+async function makeCardsNotClickable() {
         let currentCards = document.querySelectorAll(".cardoo");
         currentCards.forEach((card)=>{
         card.classList.remove("clickable")
         card.removeEventListener("click", cardClicked);
         }) 
-    resolve()
-    })
 }
 
-function hideCards() {
+async function hideCards() {
     solved = 0;
     cardsDrawn = 0
     displayPlayerScore();
-    turnAllCardsOver()
-    .then(()=>makeCardsClickable())
-    .then(()=>levelTimer.start()) 
+    await turnAllCardsOver()
+    await makeCardsClickable()
+    levelTimer.start()
 }
 
 async function turnAllCardsOver() {
@@ -352,34 +326,24 @@ async function turnAllCardsOver() {
     for (let card of currentLevel){
         if (!card.classList.contains("card-back")){
             await fadeInOut(card,1,-.2,0,10)
-            .then(()=>turnCardOver(10,card))
-            .then(()=>fadeInOut(card,0,2,1,10))
+            await turnCardOver(10,card)
+            fadeInOut(card,0,2,1,10)
         }       
     }
 }
 
-function turnCardOver(ms,card) {
-    return new Promise(resolve =>{
+async function turnCardOver(ms,card) {
         setTimeout(() => {
             card.classList.add("card-back");      
             card.classList.remove("flip");         
-            resolve()
         }, ms);
-    })
+    
 }
 
-function makeCardsClickable() {
-    return new Promise(resolve =>{
+async function makeCardsClickable() {
         let currentLevel = document.querySelectorAll(".cardoo");
         for (let card of currentLevel){
             card.classList.add("clickable");
             card.addEventListener("click", cardClicked)
-            resolve();
         }
-    })
 }
-
-
-
-
-

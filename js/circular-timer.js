@@ -1,4 +1,7 @@
 const smallStartCounter = document.querySelector("#time-to-start");
+let timerWidth = window.innerWidth;
+let timerHeight = window.innerHeight;
+let duration;
 
 if (!isMobile) {
     timerWrapper.innerHTML = `
