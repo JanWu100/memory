@@ -41,9 +41,9 @@ async function startGame() {
     if (document.querySelector(".input").value){
         player.register()      
     }
-    if (gameColor.classList.contains("boss")){
-        inverseColors(1);
-    }
+    
+    inverseColors();
+    
     player.reset()
     contentWrapper.style.opacity = 0;
     contentWrapper.innerHTML = ``;
@@ -53,11 +53,9 @@ async function startGame() {
     startLevel()
 }
 
-const startLevel = async (isBoss)=>{
+const startLevel = async ()=>{
     contentWrapper.classList.remove("lose-screen");
     contentWrapper.classList.add("hidden");
-
-    document.querySelector("#navbar").classList.remove("hidden");
     document.querySelector(".level").innerHTML = `Level ${level}`;
     floatingPointsPosition=0;
     
@@ -79,12 +77,13 @@ const startLevel = async (isBoss)=>{
         resetIntroDuration()
         break;
     }
+
     setGrid()
     displayPlayerScore();   
     await fadeInOut(timerWrapper, 0,0.2, 1,30)
     fadeInOut(levelWrapper, 0,0.1, 1,50);
  
-    generateCards(isBoss)
+    generateCards()
 
     if (isMobile) {
        await circularTimerMobile(introToLevelDuration/1000)
@@ -97,9 +96,9 @@ const startLevel = async (isBoss)=>{
     }
 }
 
-const generateCards = (isBoss) => {
+const generateCards = () => {
     levelWrapper.innerHTML = "";
-    let currentLevel = createLevel(isBoss);
+    let currentLevel = createLevel();
     currentLevel.forEach(card =>{
         const cardoo = document.createElement("div");
         cardoo.classList.add("cardoo");
@@ -124,13 +123,13 @@ function displayPlayerScore() {
         `
 }
 
-function createLevel(isBoss = 0) {
+function createLevel() {
     let deck = [];
     const shapes = ["maze1","maze2","maze3","maze4","maze5","maze6"];
     const colors = ["#0C4767","#EB5160","#66A182","#06BCC1","#4CE0B3","#F1AA63"];
     shuffle(shapes);
     shuffle(colors);
-    if (isBoss === 1){
+    if (bossLevels.includes(level)){
         for (let i = 0; i < levelSize/2 ; i++){
             deck.push({shape: shapes[i], color: "#EB5160"});
             deck.push({shape: shapes[i], color: "#EB5160"});
@@ -196,13 +195,7 @@ function cardClicked(event) {
     if (cardsDrawn > 1 && firstSelectedCard !== secondSelectedCard) {
         loseGame();        
     }
-    if (solved === levelSize/2 
-        && (level === bossLevels[0]-1
-            || level === bossLevels[1]-1
-            || level === bossLevels[2]-1
-            || level === bossLevels[3]-1)){
-        bossChallenge();
-    } else if (solved === levelSize/2){
+    if (solved === levelSize/2 ) {
         winLevel();
     }
 };
@@ -258,48 +251,29 @@ const generateLoseScreen = () => {
 const restartLevel = async () => {
     introToLevelDuration = introToLevelDuration+introDurationDeduction;
     makeCardsNotClickable();
-       
-    if (level === bossLevels[0] || level === bossLevels[1] || level === bossLevels[2] || level === bossLevels[3]){
-        level--;
-        await player.loseLife()
-        bossChallenge()
-    } else {
-        level--;
-        await player.loseLife()
-        winLevel()
-    }
-}
-
-async function bossChallenge() {
-    levelTimer.stop();
-    displayPlayerScore();
-    
-    introToLevelDuration = 2000;
-    level++;
-
-    contentWrapper.innerHTML = `<p class="boss-text">BOSS<br>CHALLENGE!</p>`
-    await fadeInOut(levelWrapper, 1,-0.1, 0,50,1500);
-    await fadeInOut(contentWrapper,0,.05,1,20)
-    await inverseColors()
-    await fadeInOut(contentWrapper,1,-.05,0,20,2000)
-    startLevel(1)
+    level--;
+    await player.loseLife()
+    winLevel()
 }
 
 async function winLevel() {
     levelTimer.stop();
     displayPlayerScore();
-    if (introToLevelDuration >= 1000) {
-        introToLevelDuration = introToLevelDuration-introDurationDeduction;
-    }
     level++;
-    contentWrapper.innerHTML = `<h3>Level ${level}</h3>`
-
+    if (bossLevels.includes(level)){
+        introToLevelDuration = 2000;
+        contentWrapper.innerHTML = `<p class="boss-text">BOSS<br>CHALLENGE!</p>`
+    } else {
+        if (introToLevelDuration >= 1000) {
+            introToLevelDuration = introToLevelDuration-introDurationDeduction;
+        }
+        contentWrapper.innerHTML = `<h3>Level ${level}</h3>`
+    }
     await fadeInOut(levelWrapper, 1,-0.1, 0,50,1500);
     await fadeInOut(contentWrapper,0,.05,1,20)
-    await inverseColors(1)
-    await fadeInOut(contentWrapper,1,-.05,0,20,300)
-    startLevel()
-    
+    await inverseColors()
+    await fadeInOut(contentWrapper,1,-.05,0,20,500)
+    startLevel() 
 }
 
 async function makeCardsNotClickable() {
