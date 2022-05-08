@@ -48,6 +48,7 @@ class Player {
   loseLife = async () => {
     const currentLife = this.displayedLifes.lastIndexOf(1);
     this.lifes--;
+    fadeInOut(document.querySelector(".warning"),0,0.2,1,30).then(()=>{fadeInOut(document.querySelector(".warning"),1,-0.2,0,30)})
     if (currentLife === -1) {
       return;
     } else {
@@ -61,6 +62,7 @@ class Player {
     }
     this.renderLifes();
   };
+
   checkForHighestScore = () => {
     if (this.score > this.highestScore) {
       this.highestScore = this.score;
@@ -69,18 +71,18 @@ class Player {
       this.highestLevelReached = levelWhenLost;
     }
   };
+
   import = async () => {
-   
-    const {name, isRegistered, highestLevelReached, highestScore} = JSON.parse(localStorage.getItem("playerData"))
-    this.name = name
-    this.isRegistered = isRegistered
-    this.highestLevelReached = highestLevelReached
-    this.highestScore = highestScore
- 
+    const { name, isRegistered, highestLevelReached, highestScore } =
+      JSON.parse(localStorage.getItem("playerData"));
+    this.name = name;
+    this.isRegistered = isRegistered;
+    this.highestLevelReached = highestLevelReached;
+    this.highestScore = highestScore;
   };
+  
   export = () => {
-    localStorage.setItem("playerData", JSON.stringify(this))
- 
+    localStorage.setItem("playerData", JSON.stringify(this));
   };
 }
 

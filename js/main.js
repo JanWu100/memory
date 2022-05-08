@@ -1,5 +1,5 @@
 const startingLevelsize = 4;
-const bossLevels = [3,6,10,15]
+const bossLevels = [3,9,16,25]
 const startingDuration = 2000;
 const introDurationDeduction = 200;
 const basePoints = 500;
@@ -135,15 +135,7 @@ function shuffle(arr) {
 };
 
 function cardClicked(event) {
-    
-    this.classList.add("flip");
-    cardsDrawn++;
-    setTimeout(()=>{
-        this.classList.remove("card-back");
-    },200)
-    this.classList.remove("clickable")
-    this.removeEventListener("click", cardClicked);
-
+    revealCard(event)
     if (cardsDrawn === 1) {
         firstSelectedCard = this.dataset.value;
     }
@@ -182,6 +174,16 @@ function cardClicked(event) {
         winLevel();
     }
 };
+
+const revealCard = (event) => {
+    event.target.classList.add("flip");
+    cardsDrawn++;
+    setTimeout(()=>{
+        event.target.classList.remove("card-back");
+    },200)
+    event.target.classList.remove("clickable")
+    event.target.removeEventListener("click", cardClicked);
+}
 
 async function loseGame() {
     if( player.lifes === 1) {

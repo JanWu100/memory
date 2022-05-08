@@ -3,18 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <link rel="stylesheet" href="./css/normalize.css" />
     <link rel="stylesheet" href="./css/styles.css" />
     <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
-  />
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
+    />
     <title>Amaze</title>
     <script src="js/utils/svg-inject.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500;900&display=swap"
+      rel="stylesheet"
+    />
     <script
       src="https://kit.fontawesome.com/e75f0e5d64.js"
       crossorigin="anonymous"
@@ -27,77 +33,78 @@
           <div class="nav-left">
             <span class="level"></span>
             <span class="lifes"></span>
-            <span class="starting-in hidden">Starting in: <span id="time-to-start">2.00<span>
-        </div>
-        <div class="nav-right  points">
+            <span class="starting-in hidden"
+              >Starting in: <span id="time-to-start">2.00</span></span
+            >
+          </div>
+          <div class="nav-right points">
             <p class="score"></p>
             <p class="score highest-score"></p>
-        </div>
+          </div>
         </div>
       </nav>
 
       <div class="container">
-          
-          <div class="main-wrapper">
-            <div id="content-wrapper">
-              <section class="welcome-screen">
-                <span class="welcome">Welcome to</span>
-                <img src="./files/amaze_logo.svg" class="logo"/>
-                    <p class="welcome-message">
-                    You will get <strong>additional life</strong> if you type in your name.
-                    </p>
-                    <input type="text" class="input" id="name-input" placeholder="Your Name" maxlength="14">
-                <button id="start" class="btn btn__primary">Play as guest</button>
+        <div class="main-wrapper">
+          <div id="content-wrapper">
+            <section class="welcome-screen">
+              <span class="welcome">Welcome to</span>
+              <img src="./files/amaze_logo.svg" class="logo" />
+              <p class="welcome-message">
+                You will get <strong>additional life</strong> if you type in
+                your name.
+              </p>
+              <input
+                type="text"
+                class="input"
+                id="name-input"
+                placeholder="Your Name"
+                maxlength="14"
+              />
+              <button id="start" class="btn btn__primary">Play as guest</button>
             </section>
-            </div>
-            <div id="countdown"></div>
-
-            <div class="welcome-screen">
-              
-            </div>
-            <div class="floating-points fp1"></div>
-            <div class="floating-points fp2"></div>
-            <div class="floating-points fp3"></div>
-
-
-
-            <div id="timer"></div>
-
-
-            
-            <div class="current-level grid grid-1x4">
-            </div>
-            <div id="win" class="win-wrapper">
-              
-            </div>
           </div>
+          <div id="countdown"></div>
+          <div class="welcome-screen"></div>
+          <div class="floating-points fp1"></div>
+          <div class="floating-points fp2"></div>
+          <div class="floating-points fp3"></div>
+          <div id="timer"></div>
+          <div class="current-level grid grid-1x4"></div>
+          <div class="warning"></div>
+        </div>
       </div>
       <footer>
         <div class="footer">
           <div class="footer-left">
-            <p class="player">Playing as: <strong id="player-name">Guest</strong></p>
+            <p class="player">
+              Playing as: <strong id="player-name">Guest</strong>
+            </p>
           </div>
           <div class="footer-right">
-            <div class="about-me"><p class="author">Find me on: </p><a href="https://github.com/JanWu100" target="blank"><i class="fab fa-github about-me__icon"></i></a><a href="https://www.linkedin.com/in/jan-wągrowski-515186229/" target="blank"><i class="fab fa-linkedin-in about-me__icon"></i></a></div>
-
+            <div class="about-me">
+              <p class="author">Find me on:</p>
+              <a href="https://github.com/JanWu100" target="blank"
+                ><i class="fab fa-github about-me__icon"></i></a
+              ><a
+                href="https://www.linkedin.com/in/jan-wągrowski-515186229/"
+                target="blank"
+                ><i class="fab fa-linkedin-in about-me__icon"></i
+              ></a>
+            </div>
           </div>
         </div>
       </footer>
     </div>
     <script src="js/player.js"></script>
     <script src="js/log-user.js"></script>
-
     <script src="js/utils/debounce.js"></script>
     <script src="js/utils/window-height-calc.js"></script>
-
     <script src="js/utils/floating-points-handler.js"></script>
     <script src="js/utils/set-grid.js"></script>
     <script src="js/utils/fade-in-out.js"></script>
-
     <script src="js/utils.js"></script>
     <script src="js/main.js"></script>
     <script src="js/circular-timer.js"></script>
-
-
   </body>
 </html>

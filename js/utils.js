@@ -18,7 +18,6 @@ function countdown(number){
     })
 };
 
-
 const levelTimer = { 
     start() {   
         this.time = 0;        
@@ -39,7 +38,6 @@ const levelTimer = {
         return parseFloat(num);
     }
 }
-
 
 async function inverseColors() {
     const gameColor = document.querySelector("#game")

@@ -15,7 +15,6 @@ html {
   box-sizing: border-box;
 }
 
-
 /* ::selection {
   background: var(--color-primary);
   color: rgb(0, 0, 0);
@@ -40,6 +39,15 @@ body {
 .boss {
   background-color: rgb(35, 35, 36);
   color: var(--color-primary);
+}
+
+.warning {
+  background-color: #eb5161b4;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
 }
 
 .hidden {
@@ -266,7 +274,6 @@ footer{
   transform: translateY(-50px);
   position: fixed;
   padding: 0 2rem;
-
   width: 100%;
 }
 
@@ -309,28 +316,15 @@ footer{
   text-align: right;
 }
 
-
-
-
-
-
 .level-wrapper {
   opacity: 0;
 }
-
-
-
 
 .win-wrapper {
  position: absolute;
  opacity: 0;
  transition: opacity 1s;
- 
- 
 }
-
-
-
 
 .win {
  position: absolute;
@@ -383,7 +377,6 @@ footer{
   text-align: center;
   background-color: var(--color-background);
  
- 
 }
 
 .lost {
@@ -404,8 +397,8 @@ footer{
 .timer {
   position: absolute;
   pointer-events: none;
-  
 }
+
 #timer {
   position: absolute;
   display: none;
@@ -463,7 +456,6 @@ nav {
   text-align: right;
 }
 
-
 .floating-points {
   color:#7FDEFF;
   position: absolute;
@@ -476,48 +468,12 @@ nav {
   pointer-events: none;
 }
 
-#mobile{
-  position: absolute;
-  z-index: 10;
-  width: 100%;
-  height: 100%;
-  padding: 2rem;
-  display: flex;
-  justify-content: center;
-  font-size: 4rem;
-  align-items: center;
-  color: var(--color-background);
-  font-weight: 900;
-  text-align: center;
-  background-color: var(--color-primary);
-  opacity: 0;
-  pointer-events: none;
-}
-
-
-
-
-
-
-
 
 .current-level {
   position: absolute;
-  
   z-index: 2;
   opacity: 0;
 }
-
-
-/* @media screen and (max-height: 840px) {
-  :root {
-    --card-width: 120px;
-    --card-gap: 8px
-  }
-
-} */
-
-
 
 .cardoo svg{
   width:50%;
@@ -528,7 +484,6 @@ nav {
   animation-name: flip;
   animation-duration: 0.3s;
 }
-
 
 .cardoo.card-back {
   background: rgb(12,71,103);
@@ -706,9 +661,7 @@ nav {
   .lifes svg{
     transform: scale(0.7) translateY(4px);
   }
-  /* .lifes svg:last-of-type{
-    transform: scale(0.7) translateY(4px) translateX(-8px);
-  } */
+
   .lifes svg:nth-of-type(2){
     transform: scale(0.7) translateY(4px) translateX(-8px);
   }
