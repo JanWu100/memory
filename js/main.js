@@ -192,15 +192,26 @@ async function loseGame() {
         player.export()
         generateLoseScreen()
         makeCardsNotClickable(); 
-    
+
         await player.loseLife()
-        await fadeInOut(levelWrapper, 1,-0.1, 0,50)
+        showRemainingCards()
+        await fadeInOut(levelWrapper, 1,-0.1, 0,50,1500)
         await fadeInOut(contentWrapper,0,.05,1,20)  
         contentWrapper.classList.remove("hidden")
         player.reset()
     } else {
         restartLevel()
     }
+}
+
+const showRemainingCards = () => {
+        let remainingCards = document.querySelectorAll(".card-back")
+        remainingCards.forEach(remainingCard => {
+            remainingCard.classList.add("flip");
+            setTimeout(()=>{
+                remainingCard.classList.remove("card-back");
+            },200)
+        })
 }
 
 const generateLoseScreen = () => {
@@ -238,6 +249,7 @@ const restartLevel = async () => {
     makeCardsNotClickable();
     level--;
     await player.loseLife()
+    showRemainingCards()
     winLevel()
 }
 
