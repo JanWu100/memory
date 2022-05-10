@@ -48,7 +48,9 @@ class Player {
   loseLife = async () => {
     const currentLife = this.displayedLifes.lastIndexOf(1);
     this.lifes--;
-    fadeInOut(document.querySelector(".warning"),0,0.2,1,30).then(()=>{fadeInOut(document.querySelector(".warning"),1,-0.2,0,30)})
+    fadeInOut(document.querySelector(".warning"), 0, 0.2, 1, 30).then(() => {
+      fadeInOut(document.querySelector(".warning"), 1, -0.2, 0, 30);
+    });
     if (currentLife === -1) {
       return;
     } else {
@@ -80,9 +82,11 @@ class Player {
     this.highestLevelReached = highestLevelReached;
     this.highestScore = highestScore;
   };
-  
+
   export = () => {
-    localStorage.setItem("playerData", JSON.stringify(this));
+    if (this.name) {
+      localStorage.setItem("playerData", JSON.stringify(this));
+    }
   };
 }
 

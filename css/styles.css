@@ -82,14 +82,7 @@ body {
   background: rgb(35,35,36);
   background: linear-gradient(22deg, rgba(35,35,36,1) 0%, rgba(58,58,62,1) 100%);
 }
-
-.boss footer{
-  background-color: rgb(35, 35, 36);
-}
-.boss .win {
-  background-color: rgb(35, 35, 36);
- }
- .boss #content-wrapper{
+.boss #content-wrapper{
   background-color: rgb(35, 35, 36);
 }
 .boss #content-wrapper.lose-screen {
@@ -266,7 +259,7 @@ strong {
 }
 
 footer{
-  background-color: #0c4767;
+  background: none;
   border-top: 1px solid rgba(255, 255, 255, 0.153);
   z-index: 15;
   height: 50px;
@@ -320,26 +313,6 @@ footer{
   opacity: 0;
 }
 
-.win-wrapper {
- position: absolute;
- opacity: 0;
- transition: opacity 1s;
-}
-
-.win {
- position: absolute;
- z-index: 3;
- background-color: var(--color-background);
- display:flex;
- align-items: center;
- justify-content: center;
- width: 100%;
- height: 100%;
- text-align: center;
- font-size: 6rem;
- opacity: 1;
-}
-
 @keyframes flip {
   0% {width:100%}
   50% {width: 0%}
@@ -367,7 +340,6 @@ footer{
 #content-wrapper.lose-screen{
   position: absolute;
   z-index: 10;
-  
   display: flex;
   justify-content: center;
   font-size: 4rem;
@@ -376,7 +348,6 @@ footer{
   font-weight: 900;
   text-align: center;
   background-color: var(--color-background);
- 
 }
 
 .lost {
@@ -422,7 +393,6 @@ nav {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
-  
 }
 .lifes {
   margin-left: .6rem;
@@ -434,7 +404,6 @@ nav {
 .points {
   width: 100%;
   margin: 0 auto;
-
 }
 
 .level {
